@@ -60,11 +60,12 @@ exports.createComment = (req, res) => {
 exports.deleteComment = (req, res) => {
     try {
         const commentId = req.params.id;
+        const role = req.role;
         db.query("SELECT * FROM contents WHERE contents_id = ?", [commentId], (error, result) => {
             if (error) throw error;
             if (!result[0]) {
                 return res.status(404).json({ message: "Object not found !" });
-            } else if (result[0].users_id !== req.auth) {
+            } else if (result[0].users_id !== req.auth && role === "true") {
                 return res.status(401).json({ message: "unauthorized request" });
             } else {
                 db.query("DELETE FROM contents WHERE contents_id = ?", [commentId], (error, resultat) => {
@@ -74,7 +75,7 @@ exports.deleteComment = (req, res) => {
                         if (result[0].postTypes_id == 1) {
                             deleteImage(result[0], "comment_picture");
                         }
-                        res.status(204);
+                        res.status(200).json({ message: "Deleted !" });
                     }
                 });
             }

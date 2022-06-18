@@ -19,28 +19,7 @@ module.exports = async (req, res, next) => {
             req.auth = userId;
             req.user = decodedToken;
             req.token = token;
-            db.query(
-                `
-                SELECT 
-                    *
-                FROM users
-                WHERE users_id = ?
-            `,
-                [req.auth],
-                (error, result) => {
-                    if (error) {
-                        throw error;
-                    } else {
-                        if (result[0].role_id !== 3) {
-                            req.role = true;
-                            next();
-                        } else {
-                            req.role = false;
-                            next();
-                        }
-                    }
-                }
-            );
+            next();
         } catch (error) {
             return res.status(401).json({ error: "Unauthorized" });
         }

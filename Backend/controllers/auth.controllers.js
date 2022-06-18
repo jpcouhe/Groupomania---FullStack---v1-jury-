@@ -111,5 +111,5 @@ exports.logout = async (req, res) => {
     /* Adding the token to the blacklist. */
     const blacklist = await cache.set(token, milliseconds);
 
-    return res.status(302).json({ message: "Logged out successfully" });
+    return res.status(200).json({ message: "Logged out successfully" });
 };

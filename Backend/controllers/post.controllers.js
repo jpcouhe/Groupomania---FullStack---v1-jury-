@@ -224,7 +224,7 @@ exports.deletePost = (req, res) => {
                                     }
                                 }
 
-                                res.status(204);
+                                res.status(200).json({ message: "Deleted !" });
                             }
                         }
                     );
@@ -242,7 +242,7 @@ exports.updatePost = (req, res) => {
         const bodyPost = JSON.parse(req.body.post);
         const title = bodyPost.title;
         const content = bodyPost.content;
-
+        const role = req.role;
         let categorie = bodyPost.categorie;
         if (!categorie || !title) {
             return res.status(400).json({ message: "Veuillez renseigner tout les champs" });
@@ -265,7 +265,7 @@ exports.updatePost = (req, res) => {
                         return res.status(404).json({ message: "Object not found !" });
                     }
 
-                    if (result[0].users_id !== req.auth) {
+                    if (result[0].users_id !== req.auth && role === "true") {
                         if (req.file) {
                             fs.unlink(req.file.path, (error) => {
                                 if (error) throw error;

@@ -3,13 +3,11 @@ const { createPost, getAllPosts, deletePost, updatePost } = require("../controll
 const multer = require("../middleware/multer-config");
 const routeur = express.Router();
 const authGuard = require("../middleware/auth.guard");
-
+const { isAdmin } = require("../middleware/admin");
 
 routeur.post("/", authGuard, multer, createPost);
 routeur.get("/", authGuard, getAllPosts);
-routeur.delete("/:id", authGuard, deletePost);
-routeur.put("/:id", authGuard, multer, updatePost);
-
-
+routeur.delete("/:id", authGuard, isAdmin, deletePost);
+routeur.put("/:id", authGuard, isAdmin, multer, updatePost);
 
 module.exports = routeur;

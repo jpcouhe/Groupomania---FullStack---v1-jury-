@@ -125,9 +125,7 @@ exports.updateProfilUser = (req, res) => {
 
                                         return res.status(200).json({ message: "User has been updated" });
                                     } else {
-                                        return res
-                                            .status(200)
-                                            .json({ message: "User has been updated AVEC image" });
+                                        return res.status(200).json({ message: "User has been updated" });
                                     }
                                 }
                             }
@@ -151,9 +149,7 @@ exports.updateProfilUser = (req, res) => {
                                 if (error) {
                                     throw error;
                                 } else {
-                                    return res
-                                        .status(200)
-                                        .json({ message: "User has been updated SANS image" });
+                                    return res.status(200).json({ message: "User has been updated" });
                                 }
                             }
                         );
@@ -243,9 +239,9 @@ exports.deleteUser = (req, res) => {
                                     if (error) throw error;
                                 });
                             }
-                            return res.status(200).json({ message: "User Deleted !" });
+                            return res.status(204);
                         } else {
-                            return res.status(200).json({ message: "User Deleted !" });
+                            return res.status(204);
                         }
                     }
                 );

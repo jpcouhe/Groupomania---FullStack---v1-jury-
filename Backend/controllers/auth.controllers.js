@@ -12,7 +12,7 @@ exports.signup = async (req, res) => {
         const password = req.body.password;
 
         if (!email || !password || !firstname || !lastname) {
-            return res.status(404).json({ error: "Please Enter informations" });
+            return res.status(400).json({ error: "Please Enter informations" });
         } else {
             db.query(
                 `
@@ -26,7 +26,7 @@ exports.signup = async (req, res) => {
                         throw error;
                     }
                     if (result[0]) {
-                        return res.status(401).json({ error: "Email has already been registered" });
+                        return res.status(409).json({ error: "Email has already been registered" });
                     } else {
                         const cryptPassword = await bcrypt.hash(password, 12);
                         db.query(
@@ -44,7 +44,7 @@ exports.signup = async (req, res) => {
                                 if (error) {
                                     throw error;
                                 } else {
-                                    return res.status(200).json({ message: "User has been registered" });
+                                    return res.status(201).json({ message: "User has been registered" });
                                 }
                             }
                         );
@@ -77,7 +77,7 @@ exports.login = (req, res) => {
                         throw error;
                     }
                     if (!result[0]) {
-                        return res.status(401).json({ error: "Email not recognized" });
+                        return res.status(403).json({ error: "Email not recognized" });
                     } else {
                         const userValid = await bcrypt.compare(password, result[0].password);
                         if (userValid) {
@@ -111,5 +111,5 @@ exports.logout = async (req, res) => {
     /* Adding the token to the blacklist. */
     const blacklist = await cache.set(token, milliseconds);
 
-    return res.json({ message: "Logged out successfully" });
+    return res.status(302).json({ message: "Logged out successfully" });
 };

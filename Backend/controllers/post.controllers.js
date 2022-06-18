@@ -2,6 +2,7 @@ const db = require("../config/db-config");
 const fs = require("fs");
 const { setCategorie } = require("../config/categorie-config");
 const { deleteImage } = require("../config/deleteImage-config");
+
 exports.createPost = (req, res) => {
     try {
         const bodyPost = JSON.parse(req.body.post);
@@ -47,7 +48,7 @@ exports.createPost = (req, res) => {
                                     if (error) {
                                         throw error;
                                     } else {
-                                        return res.status(200).json({ message: "Post has been created" });
+                                        return res.status(201).json({ message: "Post has been created" });
                                     }
                                 }
                             );
@@ -67,7 +68,7 @@ exports.createPost = (req, res) => {
                                     if (error) {
                                         throw error;
                                     } else {
-                                        return res.status(200).json({ message: "Post has been created" });
+                                        return res.status(201).json({ message: "Post has been created" });
                                     }
                                 }
                             );
@@ -223,9 +224,7 @@ exports.deletePost = (req, res) => {
                                     }
                                 }
 
-                                res.status(200).json({
-                                    message: "Deleted!",
-                                });
+                                res.status(204);
                             }
                         }
                     );
@@ -246,7 +245,7 @@ exports.updatePost = (req, res) => {
 
         let categorie = bodyPost.categorie;
         if (!categorie || !title) {
-            return res.status(401).json({ message: "Veuillez renseigner tout les champs" });
+            return res.status(400).json({ message: "Veuillez renseigner tout les champs" });
         } else {
             db.query(
                 `
@@ -272,7 +271,7 @@ exports.updatePost = (req, res) => {
                                 if (error) throw error;
                             });
                         }
-                        return res.status(404).json({ message: "unauthorized request" });
+                        return res.status(401).json({ message: "unauthorized request" });
                     }
 
                     if (req.file) {

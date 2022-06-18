@@ -1,6 +1,6 @@
 const db = require("../config/db-config");
-const fs = require("fs");
 const { deleteImage } = require("../config/deleteImage-config");
+
 exports.createComment = (req, res) => {
     try {
         const bodyPost = JSON.parse(req.body.comment);
@@ -29,7 +29,7 @@ exports.createComment = (req, res) => {
                         if (error) {
                             throw error;
                         } else {
-                            return res.status(200).json({ message: "Comment has been registered" });
+                            return res.status(201).json({ message: "Comment has been created" });
                         }
                     }
                 );
@@ -46,7 +46,7 @@ exports.createComment = (req, res) => {
                         if (error) {
                             throw error;
                         } else {
-                            return res.status(200).json({ message: "Comment has been registered" });
+                            return res.status(201).json({ message: "Comment has been registered" });
                         }
                     }
                 );
@@ -65,7 +65,7 @@ exports.deleteComment = (req, res) => {
             if (!result[0]) {
                 return res.status(404).json({ message: "Object not found !" });
             } else if (result[0].users_id !== req.auth) {
-                return res.status(404).json({ message: "unauthorized request" });
+                return res.status(401).json({ message: "unauthorized request" });
             } else {
                 db.query("DELETE FROM contents WHERE contents_id = ?", [commentId], (error, resultat) => {
                     if (error) {
@@ -74,9 +74,7 @@ exports.deleteComment = (req, res) => {
                         if (result[0].postTypes_id == 1) {
                             deleteImage(result[0], "comment_picture");
                         }
-                        res.status(200).json({
-                            message: "Deleted!",
-                        });
+                        res.status(204);
                     }
                 });
             }

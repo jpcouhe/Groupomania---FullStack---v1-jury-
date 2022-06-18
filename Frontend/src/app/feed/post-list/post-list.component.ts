@@ -120,11 +120,15 @@ export class PostListComponent implements OnInit, OnDestroy {
     }
 
     onDelete(post: any, index: number) {
+       
+
         this.contentService.deletePost(post.threads_id).subscribe(() => {
             this.content$
                 .pipe(
                     take(1),
                     map((data: any) => {
+                        console.log(data);
+
                         let newData = [];
                         for (let content of data) {
                             content.threads_id !== post.threads_id ? newData.push(content) : null;

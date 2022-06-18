@@ -42,7 +42,7 @@
                     >J'aime</span
                 >
 
-                <div *ngIf="userid == comment.users_id">
+                <div *ngIf="userid == comment.users_id || user?.role !== 3">
                     <span (click)="deleteComment(comment)">Supprimer</span>
                 </div>
                 <div class="">

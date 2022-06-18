@@ -37,6 +37,7 @@
 }
 
 .post-card__content {
+    color: var(--text-post);
     &__title {
         margin-bottom: 10px;
         padding: 0 10px;
@@ -75,11 +76,16 @@
 
 .post-card__interaction {
     height: 50px;
-    padding: 10px 0;
 
     &__span {
         cursor: pointer;
-        padding: 15px;
+        // padding: 15px;
+        margin: 5px;
+        display: flex;
+        height: 80%;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
         width: 50%;
         text-align: center;
 
@@ -92,13 +98,13 @@
         }
 
         &:hover {
-            background-color: #d5c9c1;
+            background-color: var(--background-light);
         }
     }
 }
 
 .modal-modification {
-    padding: 15px;
+    padding: 10px;
     border: 1px solid var(--background-darkest);
     border-radius: 10px;
     background-color: var(--background-white);
@@ -108,7 +114,14 @@
 
     span {
         cursor: pointer;
-        margin: 0 10px;
+        display: flex;
+
+        margin: 10px;
+
+        mat-icon {
+            margin-right: 5px;
+            margin-left: 0;
+        }
     }
 }
 

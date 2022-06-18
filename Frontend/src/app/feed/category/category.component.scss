@@ -10,10 +10,11 @@
     }
 
     &__liste {
+        width: 300px;
         overflow-y: auto;
         position: fixed;
         list-style-type: none;
-        background-color: var(--primary);
+        background-color: var(--category-background);
 
         @include lg {
             z-index: 10;
@@ -32,7 +33,7 @@
         }
 
         a {
-            color: var(--background-light);
+            color: var(--text-category);
         }
     }
 }

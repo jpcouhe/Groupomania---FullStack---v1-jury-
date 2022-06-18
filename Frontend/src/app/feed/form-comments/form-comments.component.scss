@@ -3,7 +3,6 @@
     padding: 10px;
     display: flex;
     align-items: center;
-    border-top: 1px solid #f6f6f6;
     box-sizing: border-box;
     @media screen and (max-width: 540px) {
         padding: 0;
@@ -33,7 +32,8 @@
 
         textarea {
             border-radius: 10px;
-            background-color: #f6f6f6;
+            background-color: #dbd8d8;
+            color: #433a3a;
             width: 100%;
             border: none;
             outline: none;
@@ -89,9 +89,14 @@
 }
 .btn {
     margin: 0 5px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
     padding: 7px;
     height: 30px;
+    background-color: #dbd8d8;
+    color: #433a3a;
 
     @media screen and (max-width: 540px) {
         width: 100%;

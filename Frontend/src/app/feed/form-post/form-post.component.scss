@@ -30,3 +30,35 @@
         height: 30px;
     }
 }
+
+// .mat-dialog-container {
+//     background-color: var(--background-white);
+// }
+
+::ng-deep.mat-dialog-container {
+    background-color: var(--background-white);
+}
+
+::ng-deep.mat-dialog-container select {
+    background-color: var(--input-background);
+    color: var(--color_text-title);
+}
+
+::ng-deep.mat-dialog-container input {
+    background-color: var(--input-background);
+    color: var(--color_text-title);
+}
+
+::ng-deep.mat-dialog-container textarea {
+    background-color: var(--input-background);
+    color: var(--color_text-title);
+}
+
+::ng-deep.mat-dialog-container textarea::placeholder {
+    color: var(--color_text-title);
+}
+
+::ng-deep.mat-dialog-container input::placeholder {
+    background-color: var(--input-background);
+    color: var(--color_text-title);
+}

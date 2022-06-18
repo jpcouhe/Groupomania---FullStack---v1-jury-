@@ -17,9 +17,13 @@
     --background-light: #f6f6f6;
     --background-dark: #eaeaea;
     --background-darkest: #5c7d99;
+    --category-background: #fd2d01;
     --color_text-title: #433a3a;
     --color_text-button: #fff;
+    --input-background: #f6f6f6;
     --alert: #ff0000;
+    --text-category: #433a3a;
+    --text-post: #433a3a;
 }
 
 html {
@@ -36,6 +40,11 @@ body {
 
 a {
     text-decoration: none;
+    color: var(--color_text-title);
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
 .bodybg-color {
     background-color: #fff;

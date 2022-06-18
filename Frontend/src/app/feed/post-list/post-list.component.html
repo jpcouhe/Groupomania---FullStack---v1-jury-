@@ -26,13 +26,9 @@
             >
                 <mat-icon class="post-card__header__interaction--spread">more_horiz</mat-icon>
 
-                <div
-                  
-                    #modal
-                    class="d-none modal-modification"
-                >
-                    <span (click)="modifyPost(post)">Modifier</span>
-                    <span (click)="onDelete(post, index)">Supprimer</span>
+                <div #modal class="d-none modal-modification">
+                    <span (click)="modifyPost(post)"><mat-icon>edit</mat-icon>Modifier</span>
+                    <span (click)="onDelete(post, index)"><mat-icon>delete</mat-icon>Supprimer</span>
                 </div>
             </div>
         </div>

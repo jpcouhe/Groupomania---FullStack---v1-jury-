@@ -7,6 +7,7 @@ article {
 }
 
 .comment-card {
+
     &__image {
         width: 25px;
         height: 25px;
@@ -27,12 +28,14 @@ article {
         max-width: 100%;
 
         &__user {
+            color: var(--color_text-title);
             padding: 5px;
             font-weight: 700;
             font-size: 12px;
         }
 
         &__content {
+            color: var(--text-post);
             font-size: 14px;
             padding: 5px;
 

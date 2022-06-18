@@ -1,0 +1,98 @@
+<mat-tab-group>
+    <mat-tab class="profile-tab" label="Profil">
+        <div class="profile-tab__header mt-30 d-flex flex-justify-content-center flex-align-items-center">
+            <div class="profile-tab__header__avatar">
+                <img class="profile-tab__header__avatar__image" *ngIf="url" [src]="url" />
+            </div>
+            <div>
+                <label for="file" class="label-file p-15">Choisir une image</label>
+                <input type="file" class="d-none" id="file" (change)="onselectFile($event)" />
+            </div>
+        </div>
+        <h2 class="profile-tab__title mt-20 mb-20">Informations personnelles</h2>
+        <form [formGroup]="profilForm">
+            <div class="d-flex flex-column">
+                <label for="firstname">Prénom</label>
+                <input
+                    [value]="user.firstname"
+                    type="text"
+                    class="form-control"
+                    id="firstname"
+                    placeholder="Prénom"
+                    formControlName="firstname"
+                    name="firstname"
+                />
+            </div>
+
+            <div class="d-flex flex-column secondInput">
+                <label for="lastname">Nom</label>
+                <input
+                    [value]="user.lastname"
+                    type="text"
+                    class="form-control"
+                    id="lastname"
+                    placeholder="Nom"
+                    formControlName="lastname"
+                    name="lastname"
+                />
+            </div>
+
+            <button type="submit" class="btn" (click)="saveProfil()">Enregistrer</button>
+        </form>
+    </mat-tab>
+    <mat-tab class="security-tab" label="Securité">
+        <h2 class="security-tab__title">Changez de mot de passe</h2>
+        <form [formGroup]="passwordForm" class="passwordForm">
+            <div class="d-flex flex-column">
+                <label for="oldpassword">Mot de passe actuel</label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="oldpassword"
+                    placeholder="Mot de passe actuel"
+                    formControlName="oldpassword"
+                    name="oldpassword"
+                />
+            </div>
+            <hr class="mt-20 mb-20" />
+            <div class="d-flex flex-column">
+                <label for="newpassword">Nouveau mot de passe</label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="newpassword"
+                    placeholder="Nouveau mot de passe"
+                    formControlName="newpassword"
+                    name="newpassword"
+                />
+            </div>
+            <div class="errorMsg mb-10" *ngIf="newpassword.errors?.['passwordStrength']">
+                Le password doit contenir au moins une majuscule, une minuscule et un chiffre
+            </div>
+            <div>
+                <label for="confirmNewpassword">Confirmer nouveau mot de passe</label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="confirmNewpassword"
+                    placeholder="Confirmer nouveau mot de passe"
+                    formControlName="confirmNewpassword"
+                    name="confirmNewpassword"
+                />
+            </div>
+            <div class="errorMsg mb-10" *ngIf="confirmNewpassword.errors?.['passwordMismatch']">
+                Les mots de passes ne correspondent pas
+            </div>
+            <button (click)="onSubmit()" type="submit" class="btn btn-save">Enregistrer</button>
+        </form>
+        <p class="errorMsg" *ngIf="errorMsg">{{ errorMsg }}</p>
+    </mat-tab>
+    <mat-tab class="delete-tab" label="Compte" class="deleteUser">
+        <h2 class="delete-tab__title">Supprimer le compte</h2>
+        <p class="delete-tab__message">
+            Si vous continuez, votre profil et les informations de votre compte seront totalements supprimés.
+            En revanche, si vous changez d'avis, sachez que vous ne pourrez pas le récupérer
+        </p>
+        <button (click)="deleteUser()" class="btn btn-delete">Supprimer</button>
+    </mat-tab>
+</mat-tab-group>

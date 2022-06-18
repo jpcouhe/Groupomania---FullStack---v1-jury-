@@ -1,0 +1,42 @@
+@use "../../../styles/Utils/breakpoints" as *;
+@use "../../../styles/Utils/variables" as *;
+
+.categorie {
+    width: 300px;
+    position: relative;
+
+    @include sm {
+        height: 0;
+    }
+
+    &__liste {
+        overflow-y: auto;
+        position: fixed;
+        list-style-type: none;
+        background-color: var(--primary);
+
+        @include lg {
+            z-index: 10;
+            display: flex;
+            height: 80px;
+            width: 100%;
+            align-items: center;
+            overflow-y: hidden;
+        }
+
+        @include sm {
+            display: none;
+            flex-direction: column;
+            width: 60%;
+            height: 100vh;
+        }
+
+        a {
+            color: var(--background-light);
+        }
+    }
+}
+
+.is-open {
+    display: block;
+}

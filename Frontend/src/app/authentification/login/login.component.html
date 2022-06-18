@@ -1,0 +1,44 @@
+<div class="block-content d-flex flex-align-items-center flex-justify-content-between container">
+    <div class="block-left d-flex flex-column">
+        <div class="block-left__image">
+            <picture>
+                <source srcset="../../assets/images/icon-left-font.svg" media="(min-width: 426px)" />
+                <img src="../../assets/images/icon_above-front.png" alt="example" />
+            </picture>
+        </div>
+        <h1 class="block-left__title fw-300 fs-30">Avec Groupomania, partagez un moment, échangez.</h1>
+    </div>
+    <div class="block-right mf-auto d-flex flex-column">
+        <form [formGroup]="loginForm" #localForm="ngForm">
+            <div>
+                <label for="email"></label>
+                <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    placeholder="Adresse email"
+                    formControlName="email"
+                />
+            </div>
+
+            <div>
+                <label for="password"></label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="Mot de passe"
+                    formControlName="password"
+                />
+            </div>
+
+            <p class="errorMsg" *ngIf="errorMsg">{{ errorMsg }}</p>
+            <button type="submit" (click)="onSubmit()" class="btn btn-login fs-16">Se connecter</button>
+            <p class="block-right__forgotPassword fw-300 mb-10 fs-14">Mot de passe oublié ?</p>
+        </form>
+        <hr class="w100 mb-10" />
+        <button (click)="onCreate()" class="btn w80 btn-signup mb-10 fs-12">
+            Créer nouveau compte
+        </button>
+    </div>
+</div>

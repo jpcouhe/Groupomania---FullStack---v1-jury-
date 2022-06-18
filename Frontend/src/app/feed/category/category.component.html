@@ -1,0 +1,10 @@
+<div class="categorie h100">
+    <ul [class.is-open]="isMenuOpen" class="categorie__liste h100 p-20">
+        <li class="m-20"><a [routerLink]="['feed']">Toutes les publications</a></li>
+        <div *ngFor="let categorie of categories">
+            <li class="m-20">
+                <a [routerLink]="['feed/category/', categorie.slug]"> {{ categorie.name }}</a>
+            </li>
+        </div>
+    </ul>
+</div>

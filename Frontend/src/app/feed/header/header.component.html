@@ -1,0 +1,47 @@
+<header class="header-sticky">
+    <nav class="p-20">
+        <div
+            class="d-flex flex-align-items-center flex-justify-content-between m-auto h100 maxW1440 responsive"
+        >
+            <div class="left-nav d-flex flex-align-items-center maxW1440">
+                <a [routerLink]="'/accueil/feed/'">
+                    <picture class="left-nav__logo">
+                        <source
+                            srcset="../../../assets/images/icon-left-font.svg"
+                            media="(min-width: 451px)"
+                        />
+                        <img class="left-nav__logo" src="../../../assets/images/logo.png" alt="logo" />
+                    </picture>
+                </a>
+            </div>
+
+            <div class="right-nav d-flex flex-align-items-center">
+                <div class="right-nav__logo">
+                    <mat-icon *ngIf="user?.role !== 3" class="icon">settings</mat-icon>
+
+                    <a [routerLink]="['/accueil/users']"><mat-icon class="icon">groups</mat-icon></a>
+
+                    <mat-icon *ngIf="dark" (click)="toggleDarkTheme()" class="icon">dark_mode</mat-icon>
+
+                    <mat-icon *ngIf="!dark" (click)="toggleDarkTheme()" class="icon">light_mode</mat-icon>
+
+                    <mat-icon class="icon" (click)="logOut()">logout</mat-icon>
+                    <img
+                        (click)="displayProfil()"
+                        class="right-nav__avatar"
+                        *ngIf="user"
+                        src="{{ user.imgUser }}"
+                        alt=""
+                    />
+                </div>
+
+                <div>
+                    <mat-icon (click)="toggleBox()" class="icon burger">{{
+                        isMenuOpen ? "close" : "menu"
+                    }}</mat-icon>
+                </div>
+                <!-- <div></div> -->
+            </div>
+        </div>
+    </nav>
+</header>

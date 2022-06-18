@@ -15,7 +15,7 @@ export class CategoriesService {
             .get<[Category]>("http://localhost:3003/api/categories")
             .pipe(
                 tap((categorie) => {
-                    console.log(categorie);
+                   
 
                     this.categories$.next(categorie);
                 })

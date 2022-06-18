@@ -41,7 +41,6 @@ export class CategoryComponent implements OnInit {
 
         this.toggleService.$toggle.subscribe((val: any) => {
             this.isMenuOpen = val;
-            console.log(this.isMenuOpen, "categoryComponent");
         });
 
         this.breakpointObserver

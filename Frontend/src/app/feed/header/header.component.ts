@@ -96,6 +96,6 @@ export class HeaderComponent implements OnInit {
     toggleBox(): void {
         this.visible = !this.visible;
         this.toggleService.setToggle(this.visible);
-        console.log(this.visible, "headerComponent");
+     
     }
 }

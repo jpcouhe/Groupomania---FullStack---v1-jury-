@@ -38,7 +38,7 @@ export class MainComponent implements OnInit {
 
         this.toggleService.$toggle.subscribe((val: any) => {
             this.isMenuOpen = val;
-            console.log(val, "$toggle");
+           
         });
 
         this.breakpointObserver
@@ -60,7 +60,7 @@ export class MainComponent implements OnInit {
     }
 
     clickedOutside() {
-        console.log("salut", "clickOutsideMAINcomponent");
+        
         // this.toggleService.setToggle(false);
         // this.isMenuOpen = false;
         // this.toggleService.setToggle(this.isMenuOpen);

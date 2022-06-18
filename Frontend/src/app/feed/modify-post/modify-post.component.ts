@@ -74,7 +74,13 @@ export class ModifyPostComponent implements OnInit {
             .pipe(
                 tap(() => {
                     this.router.navigateByUrl("", { skipLocationChange: true }).then(() => {
-                        this.router.navigate(["/accueil/feed/category/" + categorie]);
+                        for (const categorieDefault of this.categories) {
+                            let newCategorie = [];
+                            if (categorieDefault.categoriesId == parseInt(categorie)) {
+                                newCategorie.push(categorieDefault);
+                                this.router.navigate(["/accueil/feed/category/" + newCategorie[0].slug]);
+                            }
+                        }
                     });
 
                     this.closeTab();

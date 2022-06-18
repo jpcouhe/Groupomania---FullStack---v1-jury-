@@ -127,8 +127,7 @@ export class PostListComponent implements OnInit, OnDestroy {
                 .pipe(
                     take(1),
                     map((data: any) => {
-                        console.log(data);
-
+                      
                         let newData = [];
                         for (let content of data) {
                             content.threads_id !== post.threads_id ? newData.push(content) : null;
@@ -180,13 +179,9 @@ export class PostListComponent implements OnInit, OnDestroy {
     }
 
     displayModification(event: any, index: number) {
-        // const arr = this.ViewChild.toArray()[index];
-        // console.log(arr);
-        // arr.
-        // .classList.toggle("d-none");
-
+     
         event.target.closest("article").querySelector(".modal-modification").classList.toggle("d-none");
-        // this.isMenuOpen = !this.isMenuOpen;
+       
     }
 
     showComment(event: any) {

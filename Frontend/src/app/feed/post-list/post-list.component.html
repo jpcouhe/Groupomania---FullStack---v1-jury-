@@ -19,20 +19,34 @@
                             <p>{{ post.created_datetime | calculDate }}</p>
                         </div>
                     </div>
-                    
                 </div>
             </div>
-            <div
-                *ngIf="userid == post.users_id || user?.role !== 3"
-                (click)="displayModification($event, index)"
-                class="post-card__header__interaction"
-            >
-                <mat-icon class="post-card__header__interaction--spread">more_horiz</mat-icon>
-
-                <div #modal class="d-none modal-modification">
-                    <span (click)="modifyPost(post)"><mat-icon>edit</mat-icon>Modifier</span>
-                    <span (click)="onDelete(post, index)"><mat-icon>delete</mat-icon>Supprimer</span>
-                </div>
+            <div *ngIf="userid == post.users_id || user?.role !== 3" class="post-card__header__interaction">
+                <button
+                    class="post-card__header__interaction--spread"
+                    [matMenuTriggerFor]="menu"
+                    aria-label="Example icon-button with a menu"
+                >
+                    <mat-icon>more_horiz</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" yPosition="below" xPosition="before">
+                    <button
+                        class="d-flex flex-justify-content-center flex-align-items-center"
+                        mat-menu-item
+                        (click)="modifyPost(post)"
+                    >
+                        <mat-icon>edit</mat-icon>
+                        <span>Modifier</span>
+                    </button>
+                    <button
+                        class="d-flex flex-justify-content-center flex-align-items-center"
+                        mat-menu-item
+                        (click)="onDelete(post, index)"
+                    >
+                        <mat-icon>delete</mat-icon>
+                        <span>Supprimer</span>
+                    </button>
+                </mat-menu>
             </div>
         </div>
         <div class="post-card__content">

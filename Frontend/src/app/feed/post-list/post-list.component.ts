@@ -1,14 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    HostListener,
-    Inject,
-    OnDestroy,
-    OnInit,
-    QueryList,
-    ViewChild,
-    ViewChildren,
-} from "@angular/core";
+import { Component, ElementRef, Inject, OnDestroy, OnInit, QueryList } from "@angular/core";
 
 import { BehaviorSubject, forkJoin, fromEvent, map, Observable, take, tap } from "rxjs";
 import { ContentService } from "src/app/services/content.service";
@@ -29,7 +19,7 @@ import { CategoriesService } from "src/app/services/categories.service";
     styleUrls: ["/post-list.component.scss"],
 })
 export class PostListComponent implements OnInit, OnDestroy {
-    @ViewChildren("modal", { read: ElementRef }) ViewChild!: QueryList<"modal">;
+    togglePanel: any = {};
     loading!: boolean;
     loadingScroll!: boolean;
     userid: string;
@@ -44,8 +34,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     like: boolean;
     categorie$: any;
     itemSrv: any;
-    // categories: any;
-    // categories$: Observable<any>;
+
     route$: any;
     categories: [Category];
     categorie: any;
@@ -121,7 +110,6 @@ export class PostListComponent implements OnInit, OnDestroy {
                 });
             }
         });
-
     }
 
     onDelete(post: any, index: number) {
@@ -178,10 +166,6 @@ export class PostListComponent implements OnInit, OnDestroy {
                     });
             });
         }
-    }
-
-    displayModification(event: any, index: number) {
-        event.target.closest("article").querySelector(".modal-modification").classList.toggle("d-none");
     }
 
     showComment(event: any) {

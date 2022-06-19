@@ -13,7 +13,7 @@ import { ProfilComponent } from "./profil/profil.component";
 import { MatTabsModule } from "@angular/material/tabs";
 import { PostListComponent } from "./post-list/post-list.component";
 import { CommentListComponent } from "./comment-list/comment-list.component";
-
+import { MatMenuModule } from "@angular/material/menu";
 import { FormCommentsComponent } from "./form-comments/form-comments.component";
 import { CategoryComponent } from "./category/category.component";
 import { FeedComponent } from "./feed/feed.component";
@@ -48,6 +48,7 @@ import { InsertCategoryComponent } from './insert-category/insert-category.compo
         MatTabsModule,
         MatIconModule,
         MatProgressSpinnerModule,
+        MatMenuModule
     ],
     entryComponents: [FormPostComponent, ModifyPostComponent],
 })

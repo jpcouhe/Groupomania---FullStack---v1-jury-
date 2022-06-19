@@ -5,7 +5,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
-
+import { MatMenuModule } from "@angular/material/menu";
 import { PageNotFoundComponent } from "./page-not-found/page-not-found.component";
 import { AuthentificationModule } from "./authentification/authentification.module";
 
@@ -27,6 +27,7 @@ import { CommonModule } from "@angular/common";
         MainModule,
         NoopAnimationsModule,
         MatIconModule,
+        MatMenuModule,
     ],
     providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
     bootstrap: [AppComponent],

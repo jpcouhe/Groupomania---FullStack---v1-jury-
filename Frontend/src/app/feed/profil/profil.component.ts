@@ -16,11 +16,15 @@ import { User } from "src/models/User.model";
 export class ProfilComponent implements OnInit {
     profilForm!: FormGroup;
     passwordForm!: FormGroup;
+
     errorMsg!: string;
-    url: any = "";
-    selectedFile: File;
-    user: any;
+    url: string;
+
+    selectedFile: HTMLInputElement | undefined;
+    userId: string;
+    user: User;
     user$!: Observable<User>;
+    
     constructor(
         private formBuilder: FormBuilder,
         private userService: UserService,
@@ -31,10 +35,7 @@ export class ProfilComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        // const id = this.authService.getUserId();
-        // this.userService
-        //     .getUserById(id)
-        //     .subscribe((user) => ((this.url = user?.imgUser), (this.user = user)));
+        this.userId = this.authService.getUserId();
         this.userService.user$
             .pipe(
                 tap((user) => {
@@ -96,9 +97,8 @@ export class ProfilComponent implements OnInit {
         };
     }
     deleteUser() {
-        const id = this.authService.getUserId();
         this.userService
-            .deleteUser(id)
+            .deleteUser(this.userId)
             .pipe(
                 tap(() => {
                     this.router.navigate(["/login"]);
@@ -122,9 +122,9 @@ export class ProfilComponent implements OnInit {
     onSubmit() {
         const oldPassword = this.passwordForm.get("oldpassword")!.value;
         const newPassword = this.passwordForm.get("newpassword")!.value;
-        const id = this.authService.getUserId();
+
         this.userService
-            .updatePassword(id, oldPassword, newPassword)
+            .updatePassword(this.userId, oldPassword, newPassword)
             .pipe(
                 tap(() => {
                     this.router.navigate(["/login"]);
@@ -139,7 +139,6 @@ export class ProfilComponent implements OnInit {
     }
 
     saveProfil() {
-        const id = this.authService.getUserId();
         const firstname = this.profilForm.get("firstname")!.value || this.user.firstname;
         const lastname = this.profilForm.get("lastname")!.value || this.user.lastname;
 
@@ -147,11 +146,10 @@ export class ProfilComponent implements OnInit {
         this.selectedFile ? (imgProfil = this.selectedFile) : (imgProfil = this.url);
 
         this.userService
-            .updateUser(id, imgProfil, firstname, lastname)
+            .updateUser(this.userId, imgProfil, firstname, lastname)
             .pipe(
                 tap(() => {
-                    const id = this.authService.getUserId();
-                    this.userService.getUserById(id);
+                    this.userService.getUserById(this.userId);
 
                     this.router.navigateByUrl("", { skipLocationChange: true }).then(() => {
                         this.router.navigate(["/accueil/feed"]);

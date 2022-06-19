@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { CategoriesService } from "src/app/services/categories.service";
-import { catchError, EMPTY, Observable, tap, take } from "rxjs";
+import { tap } from "rxjs";
 import { Category } from "src/models/Category.model";
 
 @Component({
@@ -12,6 +12,7 @@ import { Category } from "src/models/Category.model";
 export class InsertCategoryComponent implements OnInit {
     categories: [Category];
     categoryForm!: FormGroup;
+
     constructor(private formBuilder: FormBuilder, private categorieService: CategoriesService) {}
 
     ngOnInit(): void {
@@ -34,7 +35,6 @@ export class InsertCategoryComponent implements OnInit {
         const slug = this.categoryForm.get("slug")!.value;
 
         this.categorieService.createCategories(name, slug).subscribe(() => {
-
             this.categorieService.categories$.next(this.categories);
         });
     }

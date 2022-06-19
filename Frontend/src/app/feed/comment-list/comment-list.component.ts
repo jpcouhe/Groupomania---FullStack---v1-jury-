@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { BehaviorSubject, forkJoin, map, Observable, take, tap } from "rxjs";
-
 import { AuthService } from "src/app/services/auth.service";
 import { ContentService } from "src/app/services/content.service";
 import { UserService } from "src/app/services/user.service";
+import { Content } from "src/models/Content.model";
 import { User } from "src/models/User.model";
 
 @Component({
@@ -17,21 +17,18 @@ export class CommentListComponent implements OnInit {
     currentPage: number = 1;
     pageSize: number = 4;
     loading!: boolean;
-    comments: any;
-    nbComments: any;
+
+    comments: Array<Content>;
+    nbComments: number;
 
     userid: string;
     user: User | undefined;
 
-    File: File | undefined;
-
-    urlCommentFile: any;
-    isLike: any;
     like: boolean;
 
     obsCommentArray: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
     comment$: Observable<any> = this.obsCommentArray.asObservable();
-    user$!: Observable<User>;
+
     constructor(
         private contentService: ContentService,
         private authService: AuthService,
@@ -46,18 +43,18 @@ export class CommentListComponent implements OnInit {
 
             .subscribe((comments) => {
                 this.comments = comments;
-                this.urlCommentFile = "";
+
                 this.loading = false;
                 this.obsCommentArray.next(comments);
             });
 
-        this.user$ = this.userService.user$.pipe(
+        this.userService.user$.pipe(
             tap((user) => {
                 this.user = user;
             })
         );
-        this.contentService.getNumberComment(this.threadId).subscribe((nb) => {
-            this.nbComments = nb;
+        this.contentService.getNumberComment(this.threadId).subscribe((nbOfComments) => {
+            this.nbComments = nbOfComments;
         });
     }
 

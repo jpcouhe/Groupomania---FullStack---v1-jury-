@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AuthService } from "src/app/services/auth.service";
 import { tap } from "rxjs";
 import { UserService } from "src/app/services/user.service";
+import { User } from "src/models/User.model";
 
 @Component({
     selector: "app-feed",
@@ -9,7 +10,7 @@ import { UserService } from "src/app/services/user.service";
     styles: [],
 })
 export class FeedComponent implements OnInit {
-    user: any;
+    user: User | undefined;
     constructor(private userService: UserService, private authService: AuthService) {}
 
     ngOnInit(): void {

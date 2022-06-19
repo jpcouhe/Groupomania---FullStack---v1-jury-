@@ -13,9 +13,10 @@ import { UserService } from "../services/user.service";
 })
 export class GetStartedComponent implements OnInit, OnDestroy {
     userComponent$!: Observable<User>;
-    user: any;
-    selectedFile: File | undefined;
-    url: any = "";
+    userId: string;
+    user: User;
+    selectedFile: HTMLInputElement | undefined;
+    url: string;
     popup = false;
 
     constructor(
@@ -26,8 +27,8 @@ export class GetStartedComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        const id = this.authService.getUserId();
-        this.userService.getUserById(id);
+        this.userId = this.authService.getUserId();
+        this.userService.getUserById(this.userId);
         this.userService.user$
             .pipe(
                 tap((user) => {
@@ -61,12 +62,10 @@ export class GetStartedComponent implements OnInit, OnDestroy {
     }
 
     goToNextPage() {
-        const id = this.authService.getUserId();
-
         let imgProfil;
         this.selectedFile ? (imgProfil = this.selectedFile) : (imgProfil = this.url);
         this.userService
-            .updateUser(id, imgProfil, this.user.firstname, this.user.lastname)
+            .updateUser(this.userId, imgProfil, this.user.firstname, this.user.lastname)
             .pipe(
                 tap(() => {
                     this.router.navigate(["/accueil/feed"]);

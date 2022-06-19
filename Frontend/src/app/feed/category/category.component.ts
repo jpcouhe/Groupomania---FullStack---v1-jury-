@@ -1,9 +1,9 @@
-import { Component, ElementRef, HostBinding, Input, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Category } from "src/models/Category.model";
 import { CategoriesService } from "../../services/categories.service";
-import { catchError, EMPTY, Observable, tap, take } from "rxjs";
+import { catchError, EMPTY, tap } from "rxjs";
 import { ToggleService } from "src/app/services/toggle.service";
-import { BreakpointObserver, Breakpoints, BreakpointState } from "@angular/cdk/layout";
+import { BreakpointObserver, BreakpointState } from "@angular/cdk/layout";
 
 @Component({
     selector: "app-category",
@@ -13,13 +13,11 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from "@angular/cdk/l
 export class CategoryComponent implements OnInit {
     categories: [Category];
     isMenuOpen: boolean = false;
-    // visible: boolean = false;
 
     constructor(
         private categorieService: CategoriesService,
         private toggleService: ToggleService,
-        public breakpointObserver: BreakpointObserver,
-        private el: ElementRef
+        public breakpointObserver: BreakpointObserver
     ) {}
     ngOnChanges() {
         this.toggleService.$toggle.subscribe((val: any) => {
@@ -60,10 +58,7 @@ export class CategoryComponent implements OnInit {
     }
 
     clickedOutside() {
-
         this.isMenuOpen = false;
         this.toggleService.setToggle(this.isMenuOpen);
     }
-
-    
 }

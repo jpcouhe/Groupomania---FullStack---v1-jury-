@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { catchError, EMPTY, Observable, tap } from "rxjs";
-import { AuthService } from "src/app/services/auth.service";
 import { ContentService } from "src/app/services/content.service";
 import { UserService } from "src/app/services/user.service";
 import { User } from "src/models/User.model";
@@ -18,16 +17,14 @@ export class FormCommentsComponent implements OnInit {
     @Input() comment$: any;
 
     commentForm!: FormGroup;
-    urlCommentFile: any;
-    userid: string;
-    url: any = "";
-    commentFile: any;
+
+    urlCommentFile: string;
+    commentFile: HTMLInputElement | undefined;
     user: User | undefined;
-    user$!: Observable<User>;
+
     constructor(
         private formBuilder: FormBuilder,
         private contentService: ContentService,
-        private authService: AuthService,
         private userService: UserService
     ) {}
 
@@ -67,7 +64,7 @@ export class FormCommentsComponent implements OnInit {
             .pipe(
                 catchError((error) => {
                     this.urlCommentFile = "";
-                    this.commentFile = "";
+                    this.commentFile = undefined;
                     this.commentForm.controls["content"].setValue("");
                     console.error(error);
                     return EMPTY;
@@ -75,7 +72,7 @@ export class FormCommentsComponent implements OnInit {
             )
             .subscribe((data) => {
                 this.urlCommentFile = "";
-                this.commentFile = "";
+                this.commentFile = undefined;
                 this.commentForm.controls["content"].setValue("");
                 this.display.emit(true);
             });

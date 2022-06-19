@@ -14,7 +14,6 @@ import { validityForm } from "../validityForm.service";
 export class SignupComponent implements OnInit {
     signupForm!: FormGroup;
     errorMsg!: string;
-    userService: any;
 
     constructor(
         private formBuilder: FormBuilder,

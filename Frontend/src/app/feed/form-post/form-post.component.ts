@@ -2,10 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { catchError, distinctUntilChanged, EMPTY, take, tap } from "rxjs";
-import { validityForm } from "src/app/authentification/validityForm.service";
+import { catchError, distinctUntilChanged, EMPTY, tap } from "rxjs";
 import { CategoriesService } from "src/app/services/categories.service";
-
 import { ContentService } from "src/app/services/content.service";
 import { Category } from "src/models/Category.model";
 

@@ -1,5 +1,4 @@
 @use "../../../styles/Utils/breakpoints" as *;
-@use "../../../styles/Utils/variables" as *;
 
 .post-card {
     margin: 40px auto;
@@ -42,8 +41,6 @@
                 background-color: #e5e5e5;
             }
         }
-
-       
     }
 }
 
@@ -137,7 +134,7 @@
 }
 
 .liked {
-    color: $secondary;
+    color: var(--secondary);
 }
 
 .mat-menu-item .mat-icon {

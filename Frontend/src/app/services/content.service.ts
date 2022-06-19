@@ -17,7 +17,7 @@ export class ContentService {
             "http://localhost:3003/api/comment/" + id + "/" + pageNumber + "/" + pageSize
         );
     }
-    getPost(pageNumber: number, pageSize: number, categorie: string | undefined) {
+    getPost(pageNumber: number, pageSize: number, categorie: string | null) {
         return this.http.get<Content[]>(
             "http://localhost:3003/api/post?start=" +
                 pageNumber +

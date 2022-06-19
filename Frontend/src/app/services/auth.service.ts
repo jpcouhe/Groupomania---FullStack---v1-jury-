@@ -1,6 +1,5 @@
 // Gros Fichier qui nous permet de créer des méthodes Accessibles à Tout nos modules et les importants dans le Constructeur
 
-import { TOUCH_BUFFER_MS } from "@angular/cdk/a11y/input-modality/input-modality-detector";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
@@ -14,9 +13,6 @@ export class AuthService {
     isLoggedIn: boolean = false;
     private access_token = "";
     private userId = "";
-    private tokenType = "";
-    private expire = "";
-    private role = "";
 
     constructor(private http: HttpClient, private router: Router) {}
 
@@ -44,8 +40,7 @@ export class AuthService {
                 tap(({ userId, access_token, token_type, expires_in }) => {
                     this.userId = userId;
                     this.access_token = access_token;
-                    this.tokenType = token_type;
-                    this.expire = expires_in;
+
                     this.isLoggedIn = true;
                 })
             );
@@ -67,8 +62,6 @@ export class AuthService {
                     this.isLoggedIn = false;
                     this.access_token = "";
                     this.userId = "";
-                    this.tokenType = "";
-                    this.expire = "";
                 })
             );
     }

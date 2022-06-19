@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { catchError, EMPTY, Observable, tap } from "rxjs";
+import { catchError, EMPTY, tap } from "rxjs";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ContentService } from "src/app/services/content.service";
 import { CategoriesService } from "src/app/services/categories.service";
@@ -15,13 +15,15 @@ import { Category } from "src/models/Category.model";
 })
 export class ModifyPostComponent implements OnInit {
     modifyForm!: FormGroup;
-    contentData: any;
-    urlFile: any = "";
+    urlFile: string;
+
     modifFile: File | undefined;
     leftCharLength: number;
     errorMsg: string;
     categories: [Category];
     dataCategorie: any;
+
+    
     constructor(
         private contentService: ContentService,
         private router: Router,
@@ -39,7 +41,7 @@ export class ModifyPostComponent implements OnInit {
             )
             .subscribe();
 
-        this.dataCategorie = this.categories.filter((word) => word.name === this.data.categorie);
+        this.dataCategorie = this.categories.filter((categorie) => categorie.name === this.data.categorie);
 
         this.leftCharLength = 70 - this.data.title.length;
         this.modifyForm = new FormGroup({

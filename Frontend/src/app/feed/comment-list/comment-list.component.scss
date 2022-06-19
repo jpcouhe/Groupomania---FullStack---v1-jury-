@@ -1,5 +1,5 @@
 @use "../../../styles/Utils/breakpoints" as *;
-@use "../../../styles/Utils/variables" as *;
+
 
 article {
     margin: 0 10px;
@@ -89,6 +89,6 @@ article {
 }
 
 .liked {
-    color: $secondary;
+    color: var(--secondary);
     font-weight: 700;
 }

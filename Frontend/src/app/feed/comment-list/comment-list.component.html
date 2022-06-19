@@ -27,7 +27,7 @@
                         <p>{{ comment.content }}</p>
                     </ng-template>
                 </div>
-                <p class="comment-card__content__information__like" *ngIf="comment.nbLike > 0">
+                <p class="comment-card__content__information__like d-flex" *ngIf="comment.nbLike > 0">
                     <img src="../../../assets/images/thumb.png" alt="Like" />{{ comment.nbLike }}
                 </p>
             </div>

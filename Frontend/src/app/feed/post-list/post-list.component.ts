@@ -1,5 +1,4 @@
-import { Component, ElementRef, Inject, OnDestroy, OnInit, QueryList } from "@angular/core";
-
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { BehaviorSubject, forkJoin, fromEvent, map, Observable, take, tap } from "rxjs";
 import { ContentService } from "src/app/services/content.service";
 import { AuthService } from "src/app/services/auth.service";
@@ -11,7 +10,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { User } from "src/models/User.model";
 import { UserService } from "src/app/services/user.service";
 import { Category } from "src/models/Category.model";
-import { CategoriesService } from "src/app/services/categories.service";
+
 
 @Component({
     selector: "app-post-list",
@@ -19,26 +18,25 @@ import { CategoriesService } from "src/app/services/categories.service";
     styleUrls: ["/post-list.component.scss"],
 })
 export class PostListComponent implements OnInit, OnDestroy {
-    togglePanel: any = {};
     loading!: boolean;
     loadingScroll!: boolean;
-    userid: string;
+
     currentPage: number = 1;
     pageSize: number = 10;
+
+    
     isMenuOpen: boolean;
-    contents: any;
     stillPost: boolean;
-    obsArray: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-    content$: Observable<any> = this.obsArray.asObservable();
-
+    
+    obsArrayContent: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+    content$: Observable<any> = this.obsArrayContent.asObservable();
+    
     like: boolean;
-    categorie$: any;
-    itemSrv: any;
-
-    route$: any;
-    categories: [Category];
-    categorie: any;
+    
+    
+    categorie: string | null;
     user: User | undefined;
+    userid: string;
 
     constructor(
         private contentService: ContentService,
@@ -47,8 +45,7 @@ export class PostListComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         @Inject(DOCUMENT) private document: any,
         private activitedRoute: ActivatedRoute,
-        private route: Router,
-        private categorieService: CategoriesService
+        private route: Router
     ) {}
 
     ngOnInit(): void {
@@ -62,13 +59,14 @@ export class PostListComponent implements OnInit, OnDestroy {
                 })
             )
             .subscribe();
+
         this.userid = this.authService.getUserId();
         this.stillPost = true;
         this.route.routeReuseStrategy.shouldReuseRoute = function () {
             return false;
         };
         this.categorie = this.activitedRoute.snapshot.paramMap.get("category");
-
+        
         this.contentService
             .getPost(this.currentPage, this.pageSize, this.categorie)
             .pipe(
@@ -77,7 +75,7 @@ export class PostListComponent implements OnInit, OnDestroy {
                 })
             )
             .subscribe((data) => {
-                this.obsArray.next(data);
+                this.obsArrayContent.next(data);
             });
 
         const scroll$ = fromEvent(window, "scroll").pipe(
@@ -101,11 +99,11 @@ export class PostListComponent implements OnInit, OnDestroy {
                     if (data[1].length === 0) {
                         this.stillPost = false;
                         this.loadingScroll = false;
-                        this.obsArray.next(newArr);
+                        this.obsArrayContent.next(newArr);
                     } else {
                         this.stillPost = true;
                         this.loadingScroll = false;
-                        this.obsArray.next(newArr);
+                        this.obsArrayContent.next(newArr);
                     }
                 });
             }
@@ -127,7 +125,7 @@ export class PostListComponent implements OnInit, OnDestroy {
                 )
                 .subscribe((data) => {
                     this.stillPost = true;
-                    this.obsArray.next(data);
+                    this.obsArrayContent.next(data);
                 });
         });
     }
@@ -146,7 +144,7 @@ export class PostListComponent implements OnInit, OnDestroy {
                         })
                     )
                     .subscribe((newArr) => {
-                        this.obsArray.next(newArr);
+                        this.obsArrayContent.next(newArr);
                     });
             });
         } else {
@@ -162,7 +160,7 @@ export class PostListComponent implements OnInit, OnDestroy {
                         })
                     )
                     .subscribe((newArr) => {
-                        this.obsArray.next(newArr);
+                        this.obsArrayContent.next(newArr);
                     });
             });
         }

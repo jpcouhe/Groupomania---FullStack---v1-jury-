@@ -35,7 +35,8 @@
 
     &__position {
         height: 100%;
-        overflow: scroll;
+        overflow: auto;
+
         list-style-type: none;
 
         @include lg {
@@ -79,3 +80,17 @@
     z-index: 30;
     width: 60%;
 }
+
+// .category {
+//     margin-top: 120px;
+//     height: calc(100vh - 120px);
+//     // position: relative;
+//     @include lg {
+//         height: 80px;
+//         display: block;
+//     }
+
+//     @include sm {
+//         height: 0;
+//     }
+// }

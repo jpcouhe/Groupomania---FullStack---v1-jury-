@@ -4,7 +4,7 @@ Project 7 of the OC formation | Build a social network
 ## Features
 
 - Authentication :
-    -
+    
 
 
 API Documentation is available here : 

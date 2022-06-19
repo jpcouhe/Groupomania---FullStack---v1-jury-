@@ -1,7 +1,7 @@
-## Groupomania
+# Groupomania
 Project 7 of the OC formation | Build a social network
 
-# Features
+## Features
 
 
 

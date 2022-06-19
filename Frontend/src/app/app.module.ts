@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AppRoutingModule } from "./app-routing.module";
@@ -14,6 +14,7 @@ import { GetStartedComponent } from "./get-started/get-started.component";
 import { AuthInterceptor } from "src/interceptors/auth-interceptor";
 import { MainModule } from "./feed/main.module";
 import { CommonModule } from "@angular/common";
+
 
 @NgModule({
     declarations: [AppComponent, PageNotFoundComponent, GetStartedComponent],

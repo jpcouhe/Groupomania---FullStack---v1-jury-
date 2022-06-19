@@ -12,7 +12,8 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from "@angular/cdk/l
 })
 export class CategoryComponent implements OnInit {
     categories: [Category];
-    isMenuOpen: boolean;
+    isMenuOpen: boolean = false;
+    // visible: boolean = false;
 
     constructor(
         private categorieService: CategoriesService,
@@ -53,4 +54,16 @@ export class CategoryComponent implements OnInit {
             });
     }
 
+    toggleBox(): void {
+        this.isMenuOpen = !this.isMenuOpen;
+        this.toggleService.setToggle(this.isMenuOpen);
+    }
+
+    clickedOutside() {
+
+        this.isMenuOpen = false;
+        this.toggleService.setToggle(this.isMenuOpen);
+    }
+
+    
 }

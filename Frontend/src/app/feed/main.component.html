@@ -1,8 +1,7 @@
 <app-header> </app-header>
 <div class="wrapper d-flex m-auto">
-    <div class="category">
-        <app-category [class.is-open]="isMenuOpen"></app-category>
-    </div>
+    <app-category class="category" [class.is-open]="isMenuOpen"></app-category>
+
     <div class="feed">
         <router-outlet></router-outlet>
     </div>

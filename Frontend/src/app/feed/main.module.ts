@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { CommonModule, DatePipe } from "@angular/common";
+import { CommonModule} from "@angular/common";
 import { HeaderComponent } from "./header/header.component";
 import { MainComponent } from "./main.component";
 import { CreatePostComponent } from "./create-post/create-post.component";
@@ -21,6 +21,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { ModifyPostComponent } from "./modify-post/modify-post.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { InsertCategoryComponent } from './insert-category/insert-category.component';
+import { ClickOutsideDirective } from "../click-outside.directive";
 
 @NgModule({
     declarations: [
@@ -39,6 +40,7 @@ import { InsertCategoryComponent } from './insert-category/insert-category.compo
         CategoryComponent,
         FeedComponent,
         InsertCategoryComponent,
+        ClickOutsideDirective
     ],
     imports: [
         FormsModule,

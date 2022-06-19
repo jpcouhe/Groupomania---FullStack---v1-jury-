@@ -48,6 +48,9 @@ nav {
 .right-nav__logo {
     display: flex;
     align-items: center;
+    @include sm {
+        margin-right: 30px;
+    }
 }
 
 .burger {

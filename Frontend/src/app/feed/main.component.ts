@@ -13,6 +13,7 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from "@angular/cdk/l
 export class MainComponent implements OnInit {
     @ViewChild("scrolltop") scrollTop: ElementRef;
     isMenuOpen: boolean;
+
     constructor(
         @Inject(DOCUMENT) private _document: any,
         private toggleService: ToggleService,
@@ -35,10 +36,8 @@ export class MainComponent implements OnInit {
             }
         });
         this._document.body.classList.remove("bodybg-color");
-
         this.toggleService.$toggle.subscribe((val: any) => {
             this.isMenuOpen = val;
-           
         });
 
         this.breakpointObserver
@@ -59,10 +58,10 @@ export class MainComponent implements OnInit {
         });
     }
 
-    clickedOutside() {
-        
-        // this.toggleService.setToggle(false);
-        // this.isMenuOpen = false;
-        // this.toggleService.setToggle(this.isMenuOpen);
-    }
+    // clickedOutside() {
+    //     console.log("salut");
+
+    //     this.isMenuOpen = false;
+    //     this.toggleService.setToggle(this.isMenuOpen);
+    // }
 }

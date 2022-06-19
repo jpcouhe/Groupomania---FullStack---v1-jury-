@@ -17,7 +17,7 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from "@angular/cdk/l
     styleUrls: ["./header.component.scss"],
 })
 export class HeaderComponent implements OnInit {
-    visible: boolean = false;
+    // visible: boolean = false;
 
     // @Input() sideBar: CategoryComponent;
     url: any;
@@ -46,14 +46,14 @@ export class HeaderComponent implements OnInit {
             )
             .subscribe();
 
-        this.breakpointObserver
-            .observe(["(min-width: 424px)"])
+        // this.breakpointObserver
+        //     .observe(["(min-width: 424px)"])
 
-            .subscribe((state: BreakpointState) => {
-                if (state.matches) {
-                    this.visible = false;
-                }
-            });
+        //     .subscribe((state: BreakpointState) => {
+        //         if (state.matches) {
+        //             this.visible = false;
+        //         }
+        //     });
     }
 
     logOut() {
@@ -93,9 +93,9 @@ export class HeaderComponent implements OnInit {
         }
     }
 
-    toggleBox(): void {
-        this.visible = !this.visible;
-        this.toggleService.setToggle(this.visible);
+    // toggleBox(): void {
+    //     this.visible = !this.visible;
+    //     this.toggleService.setToggle(this.visible);
      
-    }
+    // }
 }

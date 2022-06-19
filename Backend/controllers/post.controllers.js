@@ -1,6 +1,6 @@
 const db = require("../config/db-config");
 const fs = require("fs");
-const { setCategorie } = require("../config/categorie-config");
+
 const { deleteImage } = require("../config/deleteImage-config");
 
 exports.createPost = (req, res) => {

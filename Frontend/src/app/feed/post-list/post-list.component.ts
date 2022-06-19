@@ -9,7 +9,7 @@ import { DOCUMENT } from "@angular/common";
 import { ActivatedRoute, Router } from "@angular/router";
 import { User } from "src/models/User.model";
 import { UserService } from "src/app/services/user.service";
-import { Category } from "src/models/Category.model";
+
 
 
 @Component({

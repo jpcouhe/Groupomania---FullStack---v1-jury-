@@ -6,7 +6,7 @@
 
     @include sm {
         display: block;
-        position: absolute;
+        position: fixed;
         top: 50px;
         right: 4%;
         z-index: 300;
@@ -73,7 +73,7 @@
 
 .is-open {
     display: block;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     height: 100vh;

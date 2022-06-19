@@ -27,7 +27,7 @@ Project 7 of the OC formation | Build a social network
  
 
 ## API
-API Documentation is available here : 
+API Documentation is available here : https://documenter.getpostman.com/view/19793435/UzBmM7C3#fbe8b4fd-1636-420e-ab80-326a3ca87b59
 
 ## 🔨 Technologies 
 

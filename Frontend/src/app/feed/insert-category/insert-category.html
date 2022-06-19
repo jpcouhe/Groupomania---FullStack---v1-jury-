@@ -1,0 +1,27 @@
+<h2 class="fs-20">Inserer une catégorie</h2>
+<form [formGroup]="categoryForm" class="categories-form">
+    <div>
+        <label for="slug"></label>
+        <input
+            type="text"
+            class="categories-input"
+            id="name"
+            placeholder="Nom de la catégorie"
+            formControlName="name"
+        />
+    </div>
+    <div>
+        <label for="name"></label>
+        <input
+            type="text"
+            class="categories-input"
+            id="slug"
+            placeholder="Slug de la catégorie"
+            formControlName="slug"
+        />
+    </div>
+
+    <button (click)="createCategories()" class="btn categories-btn" type="submit">
+        <mat-icon class="categories-icon">publish</mat-icon>
+    </button>
+</form>

@@ -65,7 +65,7 @@ exports.deleteComment = (req, res) => {
             if (error) throw error;
             if (!result[0]) {
                 return res.status(404).json({ message: "Object not found !" });
-            } else if (result[0].users_id !== req.auth && role === "true") {
+            } else if (result[0].users_id !== req.auth && role === false) {
                 return res.status(401).json({ message: "unauthorized request" });
             } else {
                 db.query("DELETE FROM contents WHERE contents_id = ?", [commentId], (error, resultat) => {

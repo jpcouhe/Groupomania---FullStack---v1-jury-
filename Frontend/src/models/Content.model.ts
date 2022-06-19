@@ -8,7 +8,8 @@ export interface Content {
     firstname: string;
     profile_picture_location: string;
     users_id: string;
-    nbComment?: string;
+    categorie: string;
+    categorieSlug: string;
     nbLike?: Number;
     isLiked?: Number;
 }

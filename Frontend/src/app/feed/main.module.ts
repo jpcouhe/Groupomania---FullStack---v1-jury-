@@ -20,6 +20,7 @@ import { FeedComponent } from "./feed/feed.component";
 import { MatIconModule } from "@angular/material/icon";
 import { ModifyPostComponent } from "./modify-post/modify-post.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { InsertCategoryComponent } from './insert-category/insert-category.component';
 
 @NgModule({
     declarations: [
@@ -37,6 +38,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
         FormCommentsComponent,
         CategoryComponent,
         FeedComponent,
+        InsertCategoryComponent,
     ],
     imports: [
         FormsModule,

@@ -15,11 +15,16 @@ export class CategoriesService {
             .get<[Category]>("http://localhost:3003/api/categories")
             .pipe(
                 tap((categorie) => {
-                   
-
                     this.categories$.next(categorie);
                 })
             )
             .subscribe();
+    }
+
+    createCategories(name: string, slug: string) {
+        return this.http.post<{ message: string }>("http://localhost:3003/api/categories", {
+            name,
+            slug,
+        });
     }
 }

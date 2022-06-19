@@ -239,9 +239,9 @@ exports.deleteUser = (req, res) => {
                                     if (error) throw error;
                                 });
                             }
-                            return res.status(204);
+                            return res.status(200).json({ message: "User Deleted" });
                         } else {
-                            return res.status(204);
+                            return res.status(200).json({ message: "User Deleted" });
                         }
                     }
                 );

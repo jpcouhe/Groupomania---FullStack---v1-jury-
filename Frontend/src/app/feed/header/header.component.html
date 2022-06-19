@@ -14,7 +14,10 @@
                     </picture>
                 </a>
             </div>
-
+            <app-insert-category
+                *ngIf="user?.role !== 3"
+                class="middle-nav-insert-category"
+            ></app-insert-category>
             <div class="right-nav d-flex flex-align-items-center">
                 <div class="right-nav__logo">
                     <mat-icon *ngIf="user?.role !== 3" class="icon">settings</mat-icon>

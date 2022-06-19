@@ -20,6 +20,8 @@ import { DOCUMENT } from "@angular/common";
 import { ActivatedRoute, Router } from "@angular/router";
 import { User } from "src/models/User.model";
 import { UserService } from "src/app/services/user.service";
+import { Category } from "src/models/Category.model";
+import { CategoriesService } from "src/app/services/categories.service";
 
 @Component({
     selector: "app-post-list",
@@ -42,11 +44,13 @@ export class PostListComponent implements OnInit, OnDestroy {
     like: boolean;
     categorie$: any;
     itemSrv: any;
-    categories: any;
-    categories$: Observable<any>;
+    // categories: any;
+    // categories$: Observable<any>;
     route$: any;
+    categories: [Category];
     categorie: any;
     user: User | undefined;
+
     constructor(
         private contentService: ContentService,
         private authService: AuthService,
@@ -55,7 +59,7 @@ export class PostListComponent implements OnInit, OnDestroy {
         @Inject(DOCUMENT) private document: any,
         private activitedRoute: ActivatedRoute,
         private route: Router,
-        private el: ElementRef
+        private categorieService: CategoriesService
     ) {}
 
     ngOnInit(): void {
@@ -117,17 +121,15 @@ export class PostListComponent implements OnInit, OnDestroy {
                 });
             }
         });
+
     }
 
     onDelete(post: any, index: number) {
-       
-
         this.contentService.deletePost(post.threads_id).subscribe(() => {
             this.content$
                 .pipe(
                     take(1),
                     map((data: any) => {
-                      
                         let newData = [];
                         for (let content of data) {
                             content.threads_id !== post.threads_id ? newData.push(content) : null;
@@ -179,9 +181,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     }
 
     displayModification(event: any, index: number) {
-     
         event.target.closest("article").querySelector(".modal-modification").classList.toggle("d-none");
-       
     }
 
     showComment(event: any) {

@@ -38,7 +38,8 @@ export class ModifyPostComponent implements OnInit {
                 })
             )
             .subscribe();
-        this.dataCategorie = this.categories.filter((word) => word.slug === this.data.categorie);
+
+        this.dataCategorie = this.categories.filter((word) => word.name === this.data.categorie);
 
         this.leftCharLength = 70 - this.data.title.length;
         this.modifyForm = new FormGroup({

@@ -10,13 +10,16 @@
                     [src]="post.profile_picture_location"
                     alt="Photo de profil de {{ post.lastname }}"
                 />
-                <div class="post-card__header__content">
-                    <div class="fs-14">
-                        <p>{{ post.firstname | titlecase }} {{ post.lastname | titlecase }}</p>
+                <div class="post-card__header__content d-flex">
+                    <div>
+                        <div class="fs-14">
+                            <p>{{ post.firstname | titlecase }} {{ post.lastname | titlecase }}</p>
+                        </div>
+                        <div class="fs-10 fw-300">
+                            <p>{{ post.created_datetime | calculDate }}</p>
+                        </div>
                     </div>
-                    <div class="fs-10 fw-300">
-                        <p>{{ post.created_datetime | calculDate }}</p>
-                    </div>
+                    
                 </div>
             </div>
             <div

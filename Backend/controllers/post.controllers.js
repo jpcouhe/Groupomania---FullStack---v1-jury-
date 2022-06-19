@@ -88,7 +88,8 @@ exports.getAllPosts = (req, res) => {
 
         let start = (req.query.start - 1) * nbItems;
         let categorie = req.query.category;
-        if (categorie === "null") {
+
+        if (categorie === "null" || categorie === undefined) {
             db.query(
                 `
                 WITH tempTable AS (
@@ -108,7 +109,8 @@ exports.getAllPosts = (req, res) => {
                     u.firstname, 
                     u.profile_picture_location, 
                     c.users_id,     
-                    cc.name as categorie,      
+                    cc.name as categorie,  
+                    cc.slug as categorieSlug,    
                     SUM(CASE WHEN l.like_content_id IS NOT NULL THEN 1 ELSE 0 END) nbLike,
                     SUM(CASE WHEN l.like_user_id = ? THEN true ELSE false END) isLiked
                 FROM tempTable tt
@@ -122,7 +124,7 @@ exports.getAllPosts = (req, res) => {
                     ON c.users_id = u.users_id
                 JOIN contentcategorie cc
                     ON t.categories_id = cc.categories_id
-                GROUP BY t.threads_id, t.title, c.content, c.created_datetime, c.contents_id, u.lastname, u.firstname, u.profile_picture_location,c.users_id, cc.name
+                GROUP BY t.threads_id, t.title, c.content, c.created_datetime, c.contents_id, u.lastname, u.firstname, u.profile_picture_location,c.users_id, cc.name, cc.slug
                 ORDER BY tt.created_datetime DESC
                 LIMIT ? OFFSET ? ;`,
                 [req.auth, nbItems, start],
@@ -135,8 +137,6 @@ exports.getAllPosts = (req, res) => {
                 }
             );
         } else {
-            categorie = setCategorie(categorie);
-
             db.query(
                 `
                         WITH tempTable AS (
@@ -157,6 +157,7 @@ exports.getAllPosts = (req, res) => {
                             u.profile_picture_location,
                             c.users_id,
                             cc.name as categorie,
+                            cc.slug as categorieSlug, 
                             SUM(CASE WHEN l.like_content_id IS NOT NULL THEN 1 ELSE 0 END) nbLike,
                             SUM(CASE WHEN l.like_user_id = ? THEN true ELSE false END) isLiked
                         FROM tempTable tt
@@ -170,9 +171,9 @@ exports.getAllPosts = (req, res) => {
                             ON c.users_id = u.users_id
                         JOIN contentcategorie cc
                         ON t.categories_id = cc.categories_id
-                            WHERE t.categories_id = ?
+                            WHERE cc.slug = ?
                             
-                        GROUP BY t.threads_id, t.title, c.content, c.created_datetime, c.contents_id, u.lastname, u.firstname, u.profile_picture_location,c.users_id, cc.name
+                        GROUP BY t.threads_id, t.title, c.content, c.created_datetime, c.contents_id, u.lastname, u.firstname, u.profile_picture_location,c.users_id, cc.name,cc.slug
                         ORDER BY tt.created_datetime DESC
                         LIMIT ? OFFSET ? ;`,
                 [req.auth, categorie, nbItems, start],
@@ -194,6 +195,7 @@ exports.deletePost = (req, res) => {
     try {
         const role = req.role;
         const postId = req.params.id;
+              
         db.query(
             `
             SELECT 
@@ -205,7 +207,7 @@ exports.deletePost = (req, res) => {
                 if (error) throw error;
                 if (!result[0]) {
                     return res.status(404).json({ message: "Object not found !" });
-                } else if (result[0].users_id !== req.auth && role === "true") {
+                } else if (result[0].users_id !== req.auth && role === false) {
                     return res.status(404).json({ message: "unauthorized request" });
                 } else {
                     db.query(

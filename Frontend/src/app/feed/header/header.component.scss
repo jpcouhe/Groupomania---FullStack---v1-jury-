@@ -28,7 +28,11 @@ nav {
         width: 50px;
     }
 }
-
+.middle-nav-insert-category {
+    @include lg {
+        display: none;
+    }
+}
 .right-nav__avatar {
     width: 75px;
     height: 75px;

@@ -1,7 +1,11 @@
-HotTakes
-Project 6 of the OC formation | Build an API
+## Groupomania
+Project 7 of the OC formation | Build a social network
 
-API Documentation is available here : API doc
+# Features
+
+
+
+API Documentation is available here : 
 
 🏗️ Installation
 Clone this project from Github
@@ -26,7 +30,7 @@ npm run start:prod #
 With nodemon the app will automatically reload if you change any of the source file.
 
 After npm is done installing, set any environment variables in a .env file (in the folder BackEnd) , with this key :
-
+```
 # Port Use
 PORT= xxx
 
@@ -35,6 +39,9 @@ MONGO_SECURE_URI = mongodb+srv://<user>:<password>@cluster0.csny7.mongodb.net/<n
 
 # Random secret token
 JWT_KEY= xxx
+```
 🔨 Technology
+
+
 Node.JS / Express / MongoDB
 Packages: Multer, JsonWebTokens, uniqueValidator, uuid, helmet, nodemon, dotenv & bcryp

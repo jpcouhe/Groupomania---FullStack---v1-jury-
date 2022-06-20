@@ -65,7 +65,7 @@ exports.createPost = (req, res, next) => {
                             },
                             (error, results) => {
                                 if (error) {
-                                    next(error);
+                                    return res.status(500).json({ error: error.sqlMessage });
                                 } else {
                                     return res.status(201).json({ message: "Post has been created" });
                                 }
@@ -84,56 +84,12 @@ exports.getAllPosts = (req, res) => {
     let start = (req.query.start - 1) * nbItems;
     let categorie = req.query.category;
 
-    if (categorie === "null" || categorie === undefined) {
-        db.query(
-            `
-                WITH tempTable AS (
-                    SELECT 
-                        threads_id, 
-                        MIN(created_datetime) created_datetime
-                    FROM contents
-                    GROUP BY threads_id 
-                )
-                SELECT 
-                    t.threads_id,
-                    t.title, 
-                    c.content, 
-                    c.created_datetime, 
-                    c.contents_id, 
-                    u.lastname, 
-                    u.firstname, 
-                    u.profile_picture_location, 
-                    c.users_id,     
-                    cc.name as categorie,  
-                    cc.slug as categorieSlug,    
-                    SUM(CASE WHEN l.like_content_id IS NOT NULL THEN 1 ELSE 0 END) nbLike,
-                    SUM(CASE WHEN l.like_user_id = ? THEN true ELSE false END) isLiked
-                FROM tempTable tt
-                JOIN thread t
-                    ON tt.threads_id = t.threads_id
-                JOIN contents c
-                    ON tt.threads_id = c.threads_id AND tt.created_datetime = c.created_datetime
-                LEFT JOIN likes l
-                    ON c.contents_id = l.like_content_id
-                JOIN users u 
-                    ON c.users_id = u.users_id
-                JOIN contentcategorie cc
-                    ON t.categories_id = cc.categories_id
-                GROUP BY t.threads_id, t.title, c.content, c.created_datetime, c.contents_id, u.lastname, u.firstname, u.profile_picture_location,c.users_id, cc.name, cc.slug
-                ORDER BY tt.created_datetime DESC
-                LIMIT ? OFFSET ? ;`,
-            [req.auth, nbItems, start],
-            (error, result) => {
-                if (error) {
-                    return res.status(500).json({ error: error.sqlMessage });
-                } else {
-                    return res.status(200).json(result);
-                }
-            }
-        );
-    } else {
-        db.query(
-            `
+    categorie == "null" || categorie == undefined
+        ? (sqlParams = [req.auth, nbItems, start])
+        : (sqlParams = [req.auth, categorie, nbItems, start]);
+
+    db.query(
+        `
                         WITH tempTable AS (
                             SELECT
                                 threads_id,
@@ -167,21 +123,20 @@ exports.getAllPosts = (req, res) => {
                         JOIN contentcategorie cc
                         ON t.categories_id = cc.categories_id
                             
-                        ${categorie === "null" || categorie === undefined ? "" : "WHERE cc.slug = ?"}
+                        ${categorie == "null" || categorie == undefined ? "" : "WHERE cc.slug = ?"}
                             
                         GROUP BY t.threads_id, t.title, c.content, c.created_datetime, c.contents_id, u.lastname, u.firstname, u.profile_picture_location,c.users_id, cc.name,cc.slug
                         ORDER BY tt.created_datetime DESC
                         LIMIT ? OFFSET ? ;`,
-            [req.auth, categorie, nbItems, start],
-            (error, result) => {
-                if (error) {
-                    return res.status(500).json({ error: error.sqlMessage });
-                } else {
-                    return res.status(200).json(result);
-                }
+        sqlParams,
+        (error, result) => {
+            if (error) {
+                return res.status(500).json({ error: error.sqlMessage });
+            } else {
+                return res.status(200).json(result);
             }
-        );
-    }
+        }
+    );
 };
 
 exports.deletePost = (req, res) => {
@@ -224,131 +179,127 @@ exports.deletePost = (req, res) => {
 };
 
 exports.updatePost = (req, res) => {
-        const postId = parseInt(req.params.id);
-        const bodyPost = JSON.parse(req.body.post);
-        const title = bodyPost.title;
-        const content = bodyPost.content;
-        const role = req.role;
-        let categorie = bodyPost.categorie;
-        if (!categorie || !title) {
-            return res.status(400).json({ message: "Veuillez renseigner tout les champs" });
-        } else {
-            db.query(
-                `
+    const postId = parseInt(req.params.id);
+    const bodyPost = JSON.parse(req.body.post);
+    const title = bodyPost.title;
+    const content = bodyPost.content;
+    const role = req.role;
+    let categorie = bodyPost.categorie;
+    if (!categorie || !title) {
+        return res.status(400).json({ message: "Veuillez renseigner tout les champs" });
+    } else {
+        db.query(
+            `
                 SELECT 
                     * 
                 FROM contents 
                 WHERE contents_id = ? `,
-                [postId],
-                (error, result) => {
-                    if (error) throw error;
-                    if (!result[0]) {
-                        if (req.file) {
-                            fs.unlink(req.file.path, (error) => {
-                                if (error) return res.status(500).json({ error: error.sqlMessage });
-                            });
-                        }
-                        return res.status(404).json({ message: "Object not found !" });
-                    }
-
-                    if (result[0].users_id !== req.auth && role === "true") {
-                        if (req.file) {
-                            fs.unlink(req.file.path, (error) => {
-                                if (error) return res.status(500).json({ error: error.sqlMessage });
-                            });
-                        }
-                        return res.status(401).json({ message: "unauthorized request" });
-                    }
-
+            [postId],
+            (error, result) => {
+                if (error) throw error;
+                if (!result[0]) {
                     if (req.file) {
-                        db.query(
-                            `
+                        fs.unlink(req.file.path, (error) => {
+                            if (error) return res.status(500).json({ error: error.sqlMessage });
+                        });
+                    }
+                    return res.status(404).json({ message: "Object not found !" });
+                }
+
+                if (result[0].users_id !== req.auth && role === "true") {
+                    if (req.file) {
+                        fs.unlink(req.file.path, (error) => {
+                            if (error) return res.status(500).json({ error: error.sqlMessage });
+                        });
+                    }
+                    return res.status(401).json({ message: "unauthorized request" });
+                }
+
+                if (req.file) {
+                    db.query(
+                        `
                             UPDATE 
                                 contents  
                             JOIN thread 
                                 ON contents.threads_id = thread.threads_id
                             SET ? 
                             WHERE contents.contents_id = ?`,
+                        [
+                            {
+                                content:
+                                    req.protocol +
+                                    "://" +
+                                    req.get("host") +
+                                    "/images/post_picture/" +
+                                    req.file.filename,
+                                title: title,
+                                categories_id: categorie,
+                                postTypes_id: 1,
+                            },
+                            postId,
+                        ],
+                        (error, resultat) => {
+                            if (error) {
+                                next(error);
+                            } else {
+                                return res.status(200).json({ message: "Post has been updated" });
+                            }
+                        }
+                    );
+                } else {
+                    if (content.includes("/images/post_picture/")) {
+                        db.query(
+                            `
+                                UPDATE 
+                                    contents  
+                                JOIN thread 
+                                    ON contents.threads_id = thread.threads_id
+                                SET ? WHERE contents.contents_id = ?`,
                             [
                                 {
-                                    content:
-                                        req.protocol +
-                                        "://" +
-                                        req.get("host") +
-                                        "/images/post_picture/" +
-                                        req.file.filename,
                                     title: title,
                                     categories_id: categorie,
-                                    postTypes_id: 1,
                                 },
                                 postId,
                             ],
                             (error, resultat) => {
                                 if (error) {
-                                    next(error)
+                                    next(error);
                                 } else {
                                     return res.status(200).json({ message: "Post has been updated" });
                                 }
                             }
                         );
                     } else {
-                        if (content.includes("/images/post_picture/")) {
-                            db.query(
-                                `
+                        db.query(
+                            `
                                 UPDATE 
                                     contents  
                                 JOIN thread 
                                     ON contents.threads_id = thread.threads_id
                                 SET ? WHERE contents.contents_id = ?`,
-                                [
-                                    {
-                                        title: title,
-                                        categories_id: categorie,
-                                    },
-                                    postId,
-                                ],
-                                (error, resultat) => {
-                                    if (error) {
-                                        next(error)
-                                    } else {
-                                        return res.status(200).json({ message: "Post has been updated" });
-                                    }
-                                }
-                            );
-                        } else {
-                            db.query(
-                                `
-                                UPDATE 
-                                    contents  
-                                JOIN thread 
-                                    ON contents.threads_id = thread.threads_id
-                                SET ? WHERE contents.contents_id = ?`,
-                                [
-                                    {
-                                        content: content,
-                                        title: title,
-                                        postTypes_id: 2,
-                                        categories_id: categorie,
-                                    },
-                                    postId,
-                                ],
-                                (error, resultat) => {
-                                    if (error) {
-                                        next(error)
-                                    } else {
-                                        deleteImage(result[0], "post_picture");
+                            [
+                                {
+                                    content: content,
+                                    title: title,
+                                    postTypes_id: 2,
+                                    categories_id: categorie,
+                                },
+                                postId,
+                            ],
+                            (error, resultat) => {
+                                if (error) {
+                                    next(error);
+                                } else {
+                                    deleteImage(result[0], "post_picture");
 
-                                        return res.status(200).json({ message: "Post has been updated" });
-                                    }
+                                    return res.status(200).json({ message: "Post has been updated" });
                                 }
-                            );
-                        }
-
-                      
-                    
+                            }
+                        );
                     }
                 }
-            );
-        }
-  
+            }
+        );
+    }
 };

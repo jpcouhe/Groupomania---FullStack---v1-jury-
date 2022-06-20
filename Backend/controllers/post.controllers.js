@@ -171,7 +171,8 @@ exports.getAllPosts = (req, res) => {
                             ON c.users_id = u.users_id
                         JOIN contentcategorie cc
                         ON t.categories_id = cc.categories_id
-                            WHERE cc.slug = ?
+                            
+                        ${categorie === "null" || categorie === undefined ? '' : 'WHERE cc.slug = ?'}
                             
                         GROUP BY t.threads_id, t.title, c.content, c.created_datetime, c.contents_id, u.lastname, u.firstname, u.profile_picture_location,c.users_id, cc.name,cc.slug
                         ORDER BY tt.created_datetime DESC
@@ -327,7 +328,6 @@ exports.updatePost = (req, res) => {
                                     if (error) {
                                         throw error;
                                     } else {
-                                    
                                         return res.status(200).json({ message: "Post has been updated" });
                                     }
                                 }

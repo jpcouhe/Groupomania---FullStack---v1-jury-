@@ -48,11 +48,13 @@ export class CommentListComponent implements OnInit {
                 this.obsCommentArray.next(comments);
             });
 
-        this.userService.user$.pipe(
-            tap((user) => {
-                this.user = user;
-            })
-        );
+        this.userService.user$
+            .pipe(
+                tap((user) => {
+                    this.user = user;
+                })
+            )
+            .subscribe();
         this.contentService.getNumberComment(this.threadId).subscribe((nbOfComments) => {
             this.nbComments = nbOfComments;
         });

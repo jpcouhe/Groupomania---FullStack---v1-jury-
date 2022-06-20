@@ -2,10 +2,9 @@ const db = require("../config/db-config");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 
-exports.getAllUsers = (req, res) => {
-    try {
-        db.query(
-            `SELECT 
+exports.getAllUsers = (req, res, next) => {
+    db.query(
+        `SELECT 
                 users_id AS userId, 
                 firstname, 
                 lastname, 
@@ -13,24 +12,21 @@ exports.getAllUsers = (req, res) => {
                 profile_picture_location AS imgUser 
             FROM users 
             ORDER BY lastname`,
-            (error, result) => {
-                if (error) {
-                    throw error;
-                } else {
-                    return res.status(200).json(result);
-                }
+        (error, result) => {
+            if (error) {
+                next(error);
+            } else {
+                return res.status(200).json(result);
             }
-        );
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+        }
+    );
 };
 
 exports.getOneUser = (req, res) => {
     const userId = req.params.id;
-    try {
-        db.query(
-            `SELECT 
+
+    db.query(
+        `SELECT 
                 users_id AS userId, 
                 firstname, 
                 lastname, 
@@ -39,130 +35,123 @@ exports.getOneUser = (req, res) => {
                 profile_picture_location AS imgUser 
             FROM users 
             WHERE users_id = ? `,
-            [userId],
-            (error, result) => {
-                if (error) {
-                    throw error;
-                } else {
-                    return res.status(200).json(result[0]);
-                }
+        [userId],
+        (error, result) => {
+            if (error) {
+                next(error);
+            } else {
+                return res.status(200).json(result[0]);
             }
-        );
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+        }
+    );
 };
 
-exports.updateProfilUser = (req, res) => {
-    try {
-        const userId = req.params.id;
-        const image = req.body.image;
-        const bodyUser = JSON.parse(req.body.user);
-        const lastname = bodyUser.lastname;
-        const firstname = bodyUser.firstname;
-        if (!lastname || !firstname) {
-            return res.status(404).json({ error: "Please Enter informations" });
-        } else {
-            db.query(
-                `
+exports.updateProfilUser = (req, res, next) => {
+    const userId = req.params.id;
+    const image = req.body.image;
+    const bodyUser = JSON.parse(req.body.user);
+    const lastname = bodyUser.lastname;
+    const firstname = bodyUser.firstname;
+    if (!lastname || !firstname) {
+        return res.status(404).json({ error: "Please Enter informations" });
+    } else {
+        db.query(
+            `
                 SELECT 
                     * 
                 FROM users 
                 WHERE users_id = ?`,
-                [userId],
-                (error, result) => {
-                    if (error) throw error;
-                    if (!result[0] || result[0].users_id !== req.auth) {
-                        if (req.file) {
-                            fs.unlink(req.file.path, (error) => {
-                                if (error) throw error;
-                            });
-                        }
-                        if (!result[0]) return res.status(404).json({ message: "User not found !" });
-                        else return res.status(401).json({ message: "Unauthorized request" });
-                    }
-
+            [userId],
+            (error, result) => {
+                if (error) next(error);
+                if (!result[0] || result[0].users_id !== req.auth) {
                     if (req.file) {
-                        db.query(
-                            `
+                        fs.unlink(req.file.path, (error) => {
+                            if (error) throw error;
+                        });
+                    }
+                    if (!result[0]) return res.status(404).json({ message: "User not found !" });
+                    else return res.status(401).json({ message: "Unauthorized request" });
+                }
+
+                if (req.file) {
+                    db.query(
+                        `
                             UPDATE 
                                 users 
                             SET ? 
                             WHERE users_id = ?`,
-                            [
-                                {
-                                    profile_picture_location:
-                                        req.protocol +
-                                        "://" +
-                                        req.get("host") +
-                                        "/images/profil_picture/" +
-                                        req.file.filename,
-                                    firstname: firstname,
-                                    lastname: lastname,
-                                },
-                                userId,
-                            ],
-                            (error, updateUser) => {
-                                if (error) {
-                                    throw error;
-                                } else {
-                                    // Pour la page GetStarted, l'utilisateur n'a pas de photo de profil avant d'update, pour cette page. Route commune avec GetStart et MiseAJour
-                                    const imageProfil = result[0].profile_picture_location;
-                                    if (imageProfil !== null) {
-                                        //On vérifie que l'image n'est pas une image par defaut pour ne pas la supprimer
-                                        const isImageProfilDefault =
-                                            imageProfil.includes("/images/default_picture");
-                                        if (isImageProfilDefault === false) {
-                                            const filename =
-                                                result[0].profile_picture_location.split(
-                                                    "/images/profil_picture/"
-                                                )[1];
+                        [
+                            {
+                                profile_picture_location:
+                                    req.protocol +
+                                    "://" +
+                                    req.get("host") +
+                                    "/images/profil_picture/" +
+                                    req.file.filename,
+                                firstname: firstname,
+                                lastname: lastname,
+                            },
+                            userId,
+                        ],
+                        (error, updateUser) => {
+                            if (error) {
+                                next(error);
+                            } else {
+                                // Pour la page GetStarted, l'utilisateur n'a pas de photo de profil avant d'update, pour cette page. Route commune avec GetStart et MiseAJour
+                                const imageProfil = result[0].profile_picture_location;
+                                if (imageProfil !== null) {
+                                    //On vérifie que l'image n'est pas une image par defaut pour ne pas la supprimer
+                                    const isImageProfilDefault =
+                                        imageProfil.includes("/images/default_picture");
+                                    if (isImageProfilDefault === false) {
+                                        const filename =
+                                            result[0].profile_picture_location.split(
+                                                "/images/profil_picture/"
+                                            )[1];
 
-                                            fs.unlink("images/profil_picture/" + filename, (error) => {
-                                                if (error) throw error;
-                                            });
-                                        }
-
-                                        return res.status(200).json({ message: "User has been updated" });
-                                    } else {
-                                        return res.status(200).json({ message: "User has been updated" });
+                                        fs.unlink("images/profil_picture/" + filename, (error) => {
+                                            if (error) throw error;
+                                        });
                                     }
-                                }
-                            }
-                        );
-                    } else {
-                        db.query(
-                            `
-                            UPDATE 
-                                users 
-                            SET ? 
-                            WHERE users_id = ?`,
-                            [
-                                {
-                                    profile_picture_location: req.body.image,
-                                    firstname: firstname,
-                                    lastname: lastname,
-                                },
-                                userId,
-                            ],
-                            (error, resultat) => {
-                                if (error) {
-                                    throw error;
+
+                                    return res.status(200).json({ message: "User has been updated" });
                                 } else {
                                     return res.status(200).json({ message: "User has been updated" });
                                 }
                             }
-                        );
-                    }
+                        }
+                    );
+                } else {
+                    db.query(
+                        `
+                            UPDATE 
+                                users 
+                            SET ? 
+                            WHERE users_id = ?`,
+                        [
+                            {
+                                profile_picture_location: req.body.image,
+                                firstname: firstname,
+                                lastname: lastname,
+                            },
+                            userId,
+                        ],
+                        (error, resultat) => {
+                            if (error) {
+                                next(error);
+                            } else {
+                                return res.status(200).json({ message: "User has been updated" });
+                            }
+                        }
+                    );
                 }
-            );
-        }
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+            }
+        );
     }
 };
 
-exports.updatePasswordUser = async (req, res) => {
+exports.updatePasswordUser = async (req, res, next) => {
     const userId = req.params.id;
     const oldPassword = req.body.oldpassword;
     const newPassword = req.body.newpassword;
@@ -177,7 +166,7 @@ exports.updatePasswordUser = async (req, res) => {
         [userId],
         async (error, result) => {
             if (error) {
-                throw error;
+                next(error);
             }
             if (!result[0]) {
                 return res.status(404).json({ message: "User not found !" });
@@ -204,7 +193,7 @@ exports.updatePasswordUser = async (req, res) => {
     );
 };
 /* Deleting a user from the database. */
-exports.deleteUser = (req, res) => {
+exports.deleteUser = (req, res, next) => {
     const userId = req.params.id;
     db.query(
         `
@@ -215,7 +204,7 @@ exports.deleteUser = (req, res) => {
         [userId],
         (error, result) => {
             if (error) {
-                throw error;
+                next(error);
             }
             if (!result[0]) {
                 return res.status(404).json({ error: "User not found !" });
@@ -236,7 +225,7 @@ exports.deleteUser = (req, res) => {
                                     result[0].profile_picture_location.split("/images/profil_picture/")[1];
 
                                 fs.unlink("images/profil_picture/" + filename, (error) => {
-                                    if (error) throw error;
+                                    if (error) next(error);
                                 });
                             }
                             return res.status(200).json({ message: "User Deleted" });

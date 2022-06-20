@@ -4,43 +4,38 @@ const jwt = require("../utils/jwt");
 const jwtConfig = require("../config/jwt-config");
 const cache = require("../utils/cache");
 
-exports.signup = async (req, res) => {
-    try {
-        const firstname = req.body.firstname.toLowerCase();
-        const lastname = req.body.lastname.toUpperCase();
-        const email = req.body.email;
-        const password = req.body.password;
-        const cryptPassword = await bcrypt.hash(password, 12);
-        if (!email || !password || !firstname || !lastname) {
-            return res.status(400).json({ error: "Please Enter informations" });
-        }
+exports.signup = async (req, res, next) => {
+    const firstname = req.body.firstname.toLowerCase();
+    const lastname = req.body.lastname.toUpperCase();
+    const email = req.body.email;
+    const password = req.body.password;
+    const cryptPassword = await bcrypt.hash(password, 12);
+    if (!email || !password || !firstname || !lastname) {
+        return res.status(400).json({ error: "Please Enter informations" });
+    }
 
-        // Vérification avant d'inserer si l'adresse mail n'existe pas déjà
-        db.query(
-            `
+    // Vérification avant d'inserer si l'adresse mail n'existe pas déjà
+    db.query(
+        `
             INSERT INTO users (lastname, firstname, email, password )SELECT ?,?, ?, ? WHERE NOT EXISTS (SELECT * FROM users WHERE email = ?);
             `,
-            [lastname, firstname, email, cryptPassword, email],
-            (error, results, fields) => {
-                if (error) {
-                    throw error;
+        [lastname, firstname, email, cryptPassword, email],
+        (error, results, fields) => {
+            if (error) {
+                next(error);
+            } else {
+                // Vérification de la création de la ligne
+                if (results.affectedRows !== 1) {
+                    return res.status(409).json({ error: "Email has already been registered" });
                 } else {
-                    // Vérification de la création de la ligne
-                    if (results.affectedRows !== 1) {
-                        return res.status(409).json({ error: "Email has already been registered" });
-                    } else {
-                        return res.status(201).json({ message: "User has been registered" });
-                    }
+                    return res.status(201).json({ message: "User has been registered" });
                 }
             }
-        );
-    } catch (error) {
-        res.status(500).json({ error });
-    }
+        }
+    );
 };
 
-exports.login = (req, res) => {
-    try {
+exports.login = (req, res, next) => {
         const email = req.body.email;
         const password = req.body.password;
 
@@ -56,7 +51,7 @@ exports.login = (req, res) => {
                 [email],
                 async (error, result) => {
                     if (error) {
-                        throw error;
+                        next(error)
                     }
                     if (!result[0]) {
                         return res.status(403).json({ error: "Email not recognized" });
@@ -77,9 +72,6 @@ exports.login = (req, res) => {
                 }
             );
         }
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
 };
 
 /* A logout function that is used to logout a user. */

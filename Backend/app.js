@@ -5,7 +5,6 @@ const express = require("express");
 const db = require("./config/db-config");
 const app = express();
 
-
 if (process.env.NODE_ENV === "development") {
     const morgan = require("morgan");
     const morganBody = require("morgan-body");
@@ -52,5 +51,12 @@ app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/categories", categoriesRoutes);
 app.use("/api/comment", commentRoutes);
+
+app.use((err, req, res, next) => {
+    // console.error(err.stack);
+    console.log(err);
+    console.log(err.message);
+    res.status(500).json({ error: err.message });
+});
 
 module.exports = app;

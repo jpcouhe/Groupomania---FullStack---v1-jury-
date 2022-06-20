@@ -45,7 +45,7 @@ exports.createPost = (req, res, next) => {
                             },
                             (error, results) => {
                                 if (error) {
-                                    next(error);
+                                    return res.status(500).json({ error: error.sqlMessage });
                                 } else {
                                     return res.status(201).json({ message: "Post has been created" });
                                 }
@@ -78,7 +78,7 @@ exports.createPost = (req, res, next) => {
     }
 };
 
-exports.getAllPosts = (req, res, next) => {
+exports.getAllPosts = (req, res) => {
     const nbItems = parseInt(req.query.limit);
 
     let start = (req.query.start - 1) * nbItems;
@@ -125,7 +125,7 @@ exports.getAllPosts = (req, res, next) => {
             [req.auth, nbItems, start],
             (error, result) => {
                 if (error) {
-                    next(error);
+                    return res.status(500).json({ error: error.sqlMessage });
                 } else {
                     return res.status(200).json(result);
                 }
@@ -175,7 +175,7 @@ exports.getAllPosts = (req, res, next) => {
             [req.auth, categorie, nbItems, start],
             (error, result) => {
                 if (error) {
-                    next(error);
+                    return res.status(500).json({ error: error.sqlMessage });
                 } else {
                     return res.status(200).json(result);
                 }
@@ -184,7 +184,7 @@ exports.getAllPosts = (req, res, next) => {
     }
 };
 
-exports.deletePost = (req, res, next) => {
+exports.deletePost = (req, res) => {
     const role = req.role;
     const postId = req.params.id;
 
@@ -204,7 +204,7 @@ exports.deletePost = (req, res, next) => {
             } else {
                 db.query("DELETE FROM thread WHERE thread.threads_id = ?", [postId], (error, resultat) => {
                     if (error) {
-                        next(error);
+                        return res.status(500).json({ error: error.sqlMessage });
                     } else {
                         if (result[0].postTypes_id == 1) {
                             deleteImage(result[0], "post_picture");
@@ -223,7 +223,7 @@ exports.deletePost = (req, res, next) => {
     );
 };
 
-exports.updatePost = (req, res, next) => {
+exports.updatePost = (req, res) => {
         const postId = parseInt(req.params.id);
         const bodyPost = JSON.parse(req.body.post);
         const title = bodyPost.title;
@@ -245,7 +245,7 @@ exports.updatePost = (req, res, next) => {
                     if (!result[0]) {
                         if (req.file) {
                             fs.unlink(req.file.path, (error) => {
-                                if (error) next(error);
+                                if (error) return res.status(500).json({ error: error.sqlMessage });
                             });
                         }
                         return res.status(404).json({ message: "Object not found !" });
@@ -254,7 +254,7 @@ exports.updatePost = (req, res, next) => {
                     if (result[0].users_id !== req.auth && role === "true") {
                         if (req.file) {
                             fs.unlink(req.file.path, (error) => {
-                                if (error) next(error);
+                                if (error) return res.status(500).json({ error: error.sqlMessage });
                             });
                         }
                         return res.status(401).json({ message: "unauthorized request" });

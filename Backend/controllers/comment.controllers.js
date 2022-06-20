@@ -1,7 +1,7 @@
 const db = require("../config/db-config");
 const { deleteImage } = require("../config/deleteImage-config");
 
-exports.createComment = (req, res, next) => {
+exports.createComment = (req, res) => {
     const bodyPost = JSON.parse(req.body.comment);
     const threadId = bodyPost.threadId;
     const content = bodyPost.content;
@@ -26,7 +26,7 @@ exports.createComment = (req, res, next) => {
                 },
                 (error, results) => {
                     if (error) {
-                        next(error);
+                        return res.status(500).json({ error: error.sqlMessage });
                     } else {
                         return res.status(201).json({ message: "Comment has been created" });
                     }
@@ -43,7 +43,7 @@ exports.createComment = (req, res, next) => {
                 },
                 (error, results) => {
                     if (error) {
-                        next(error);
+                        return res.status(500).json({ error: error.sqlMessage });
                     } else {
                         return res.status(201).json({ message: "Comment has been registered" });
                     }
@@ -53,7 +53,7 @@ exports.createComment = (req, res, next) => {
     }
 };
 
-exports.deleteComment = (req, res, next) => {
+exports.deleteComment = (req, res) => {
     const commentId = req.params.id;
     const role = req.role;
     db.query("SELECT * FROM contents WHERE contents_id = ?", [commentId], (error, result) => {
@@ -65,7 +65,7 @@ exports.deleteComment = (req, res, next) => {
         } else {
             db.query("DELETE FROM contents WHERE contents_id = ?", [commentId], (error, resultat) => {
                 if (error) {
-                    next(error);
+                    return res.status(500).json({ error: error.sqlMessage });
                 } else {
                     if (result[0].postTypes_id == 1) {
                         deleteImage(result[0], "comment_picture");
@@ -77,7 +77,7 @@ exports.deleteComment = (req, res, next) => {
     });
 };
 
-exports.getAllComments = (req, res, next) => {
+exports.getAllComments = (req, res) => {
     const nbItems = parseInt(req.params.limit);
     let start = (req.params.start - 1) * nbItems;
     const threadId = req.params.id;
@@ -118,7 +118,7 @@ exports.getAllComments = (req, res, next) => {
         [threadId, req.auth, nbItems, start],
         (error, result) => {
             if (error) {
-                next(error);
+                return res.status(500).json({ error: error.sqlMessage });
             } else {
                 return res.status(200).json(result);
             }
@@ -126,14 +126,14 @@ exports.getAllComments = (req, res, next) => {
     );
 };
 
-exports.getNumberCommentsForAThread = (req, res, next) => {
+exports.getNumberCommentsForAThread = (req, res) => {
     const threadId = parseInt(req.params.id);
     db.query(
         `SELECT SUM(CASE WHEN contents.threads_id = ? THEN 1 ELSE 0 END) nbComment FROM contents`,
         [threadId],
         (error, result) => {
             if (error) {
-                next(error);
+                return res.status(500).json({ error: error.sqlMessage });
             } else {
                 // J'enlève le Post Initial
                 let comment = result[0].nbComment - 1;

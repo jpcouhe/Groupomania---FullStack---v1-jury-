@@ -67,7 +67,7 @@ exports.updateProfilUser = (req, res, next) => {
                 if (!result[0] || result[0].users_id !== req.auth) {
                     if (req.file) {
                         fs.unlink(req.file.path, (error) => {
-                            if (error) throw error;
+                            if (error) next(error);
                         });
                     }
                     if (!result[0]) return res.status(404).json({ message: "User not found !" });
@@ -96,7 +96,7 @@ exports.updateProfilUser = (req, res, next) => {
                         ],
                         (error, updateUser) => {
                             if (error) {
-                                next(error);
+                                return res.status(500).json({ error: error.sqlMessage });
                             } else {
                                 // Pour la page GetStarted, l'utilisateur n'a pas de photo de profil avant d'update, pour cette page. Route commune avec GetStart et MiseAJour
                                 const imageProfil = result[0].profile_picture_location;
@@ -139,7 +139,7 @@ exports.updateProfilUser = (req, res, next) => {
                         ],
                         (error, resultat) => {
                             if (error) {
-                                next(error);
+                                return res.status(500).json({ error: error.sqlMessage });
                             } else {
                                 return res.status(200).json({ message: "User has been updated" });
                             }
@@ -151,7 +151,7 @@ exports.updateProfilUser = (req, res, next) => {
     }
 };
 
-exports.updatePasswordUser = async (req, res, next) => {
+exports.updatePasswordUser = async (req, res) => {
     const userId = req.params.id;
     const oldPassword = req.body.oldpassword;
     const newPassword = req.body.newpassword;
@@ -166,7 +166,7 @@ exports.updatePasswordUser = async (req, res, next) => {
         [userId],
         async (error, result) => {
             if (error) {
-                next(error);
+                return res.status(500).json({ error: error.sqlMessage });
             }
             if (!result[0]) {
                 return res.status(404).json({ message: "User not found !" });
@@ -204,7 +204,7 @@ exports.deleteUser = (req, res, next) => {
         [userId],
         (error, result) => {
             if (error) {
-                next(error);
+                return res.status(500).json({ error: error.sqlMessage });
             }
             if (!result[0]) {
                 return res.status(404).json({ error: "User not found !" });

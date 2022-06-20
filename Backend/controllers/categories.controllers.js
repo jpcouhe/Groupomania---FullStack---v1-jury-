@@ -1,6 +1,6 @@
 const db = require("../config/db-config");
 
-exports.getAllCategorie = (req, res, next) => {
+exports.getAllCategorie = (req, res) => {
     db.query(
         `
             SELECT
@@ -11,7 +11,7 @@ exports.getAllCategorie = (req, res, next) => {
         `,
         (error, result) => {
             if (error) {
-                next(error);
+                return res.status(500).json({ error: error.sqlMessage });
             } else {
                 return res.status(200).json(result);
             }
@@ -19,7 +19,7 @@ exports.getAllCategorie = (req, res, next) => {
     );
 };
 
-exports.insertCategorie = async (req, res, next) => {
+exports.insertCategorie = async (req, res) => {
     const { name, slug } = req.body;
 
     db.query(
@@ -34,7 +34,7 @@ exports.insertCategorie = async (req, res, next) => {
         },
         (error, result) => {
             if (error) {
-                next(error);
+                return res.status(500).json({ error: error.sqlMessage });
             } else {
                 return res.status(201).json(result);
             }

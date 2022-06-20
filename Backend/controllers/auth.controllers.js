@@ -4,7 +4,7 @@ const jwt = require("../utils/jwt");
 const jwtConfig = require("../config/jwt-config");
 const cache = require("../utils/cache");
 
-exports.signup = async (req, res, next) => {
+exports.signup = async (req, res) => {
     const firstname = req.body.firstname.toLowerCase();
     const lastname = req.body.lastname.toUpperCase();
     const email = req.body.email;
@@ -22,7 +22,7 @@ exports.signup = async (req, res, next) => {
         [lastname, firstname, email, cryptPassword, email],
         (error, results, fields) => {
             if (error) {
-                next(error);
+                return res.status(500).json({ error: error.sqlMessage });
             } else {
                 // Vérification de la création de la ligne
                 if (results.affectedRows !== 1) {
@@ -35,7 +35,7 @@ exports.signup = async (req, res, next) => {
     );
 };
 
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
 
@@ -51,7 +51,7 @@ exports.login = (req, res, next) => {
                 [email],
                 async (error, result) => {
                     if (error) {
-                        next(error)
+                        return res.status(500).json({ error: error.sqlMessage });
                     }
                     if (!result[0]) {
                         return res.status(403).json({ error: "Email not recognized" });

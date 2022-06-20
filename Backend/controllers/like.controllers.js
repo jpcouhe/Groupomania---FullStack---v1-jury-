@@ -1,6 +1,6 @@
 const db = require("../config/db-config");
 
-exports.contentLike = async (req, res, next) => {
+exports.contentLike = async (req, res) => {
     const content = req.params.id;
     const userId = req.auth;
     const like = req.body.like;
@@ -15,7 +15,7 @@ exports.contentLike = async (req, res, next) => {
                 WHERE like_content_id  = ? AND like_user_id = ?`,
             [content, userId],
             (error, result) => {
-                if (error) next(error);
+                if (error) return res.status(500).json({ error: error.sqlMessage });
                 else {
                     resolve(result);
                 }
@@ -34,7 +34,7 @@ exports.contentLike = async (req, res, next) => {
                         WHERE like_user_id =? AND like_content_id = ?`,
                     [userId, content],
                     (error, result) => {
-                        if (error) next(error);
+                        if (error) return res.status(500).json({ error: error.sqlMessage });
                         else {
                             return res.status(200).json({ message: "Like Supprimé" });
                         }
@@ -55,7 +55,7 @@ exports.contentLike = async (req, res, next) => {
                         VALUES (?,?)`,
                     [userId, content],
                     (error, result) => {
-                        if (error) next(error);
+                        if (error) return res.status(500).json({ error: error.sqlMessage });
                         else {
                             return res.status(200).json({ message: "Like Ajouté" });
                         }

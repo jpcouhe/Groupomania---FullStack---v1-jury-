@@ -53,9 +53,6 @@ app.use("/api/categories", categoriesRoutes);
 app.use("/api/comment", commentRoutes);
 
 app.use((err, req, res, next) => {
-    // console.error(err.stack);
-    console.log(err);
-    console.log(err.message);
     res.status(500).json({ error: err.message });
 });
 

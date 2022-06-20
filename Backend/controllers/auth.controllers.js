@@ -10,48 +10,30 @@ exports.signup = async (req, res) => {
         const lastname = req.body.lastname.toUpperCase();
         const email = req.body.email;
         const password = req.body.password;
-
+        const cryptPassword = await bcrypt.hash(password, 12);
         if (!email || !password || !firstname || !lastname) {
             return res.status(400).json({ error: "Please Enter informations" });
-        } else {
-            db.query(
-                `
-                SELECT 
-                    email 
-                FROM users 
-                WHERE email = ?`,
-                [email],
-                async (error, result) => {
-                    if (error) {
-                        throw error;
-                    }
-                    if (result[0]) {
+        }
+
+        // Vérification avant d'inserer si l'adresse mail n'existe pas déjà
+        db.query(
+            `
+            INSERT INTO users (lastname, firstname, email, password )SELECT ?,?, ?, ? WHERE NOT EXISTS (SELECT * FROM users WHERE email = ?);
+            `,
+            [lastname, firstname, email, cryptPassword, email],
+            (error, results, fields) => {
+                if (error) {
+                    throw error;
+                } else {
+                    // Vérification de la création de la ligne
+                    if (results.affectedRows !== 1) {
                         return res.status(409).json({ error: "Email has already been registered" });
                     } else {
-                        const cryptPassword = await bcrypt.hash(password, 12);
-                        db.query(
-                            `
-                            INSERT INTO 
-                                users 
-                            SET ?`,
-                            {
-                                lastname: lastname,
-                                firstname: firstname,
-                                email: email,
-                                password: cryptPassword,
-                            },
-                            (error, results) => {
-                                if (error) {
-                                    throw error;
-                                } else {
-                                    return res.status(201).json({ message: "User has been registered" });
-                                }
-                            }
-                        );
+                        return res.status(201).json({ message: "User has been registered" });
                     }
                 }
-            );
-        }
+            }
+        );
     } catch (error) {
         res.status(500).json({ error });
     }

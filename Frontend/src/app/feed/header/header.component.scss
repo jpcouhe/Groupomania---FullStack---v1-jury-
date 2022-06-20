@@ -38,6 +38,7 @@ nav {
     height: 75px;
     border-radius: 50%;
     margin: 0 20px;
+    object-fit: cover;
     cursor: pointer;
     @include breakpoint(450px) {
         width: 50px;

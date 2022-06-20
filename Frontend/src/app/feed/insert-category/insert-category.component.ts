@@ -1,8 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { CategoriesService } from "src/app/services/categories.service";
-import { tap } from "rxjs";
+import { catchError, EMPTY, tap } from "rxjs";
 import { Category } from "src/models/Category.model";
+import { Router } from "@angular/router";
 
 @Component({
     selector: "app-insert-category",
@@ -12,8 +13,13 @@ import { Category } from "src/models/Category.model";
 export class InsertCategoryComponent implements OnInit {
     categories: [Category];
     categoryForm!: FormGroup;
+    errorMsg: string;
 
-    constructor(private formBuilder: FormBuilder, private categorieService: CategoriesService) {}
+    constructor(
+        private formBuilder: FormBuilder,
+        private categorieService: CategoriesService,
+        private router: Router
+    ) {}
 
     ngOnInit(): void {
         this.categoryForm = this.formBuilder.group({
@@ -34,9 +40,19 @@ export class InsertCategoryComponent implements OnInit {
         const name = this.categoryForm.get("name")!.value;
         const slug = this.categoryForm.get("slug")!.value;
 
-        this.categorieService.createCategories(name, slug).subscribe(() => {
-            this.categorieService.categories$.next(this.categories);
-        });
+        this.categorieService
+            .createCategories(name, slug)
+            .pipe(
+                catchError((error) => {
+                    this.errorMsg = error.error.error;
+                    return EMPTY;
+                })
+            )
+            .subscribe(() => {
+                this.router
+                    .navigateByUrl("/", { skipLocationChange: true })
+                    .then(() => this.router.navigate(["/accueil/feed"]));
+            });
     }
 
     get name() {

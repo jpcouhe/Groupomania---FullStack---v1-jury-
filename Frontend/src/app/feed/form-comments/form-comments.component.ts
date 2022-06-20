@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { catchError, EMPTY, Observable, tap } from "rxjs";
+import { catchError, EMPTY, tap } from "rxjs";
 import { ContentService } from "src/app/services/content.service";
 import { UserService } from "src/app/services/user.service";
 import { User } from "src/models/User.model";

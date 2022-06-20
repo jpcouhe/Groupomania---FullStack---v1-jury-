@@ -1,6 +1,5 @@
 @use "../../../styles/Utils/breakpoints" as *;
 
-
 .categorie-menu-burger {
     display: none;
 
@@ -17,7 +16,7 @@
     width: 300px;
     height: 100vh;
 
-    background-color: var(--category-background);
+    background-color: var(--background-light);
     @include lg {
         z-index: 10;
         display: flex;
@@ -80,4 +79,3 @@
     z-index: 30;
     width: 60%;
 }
-

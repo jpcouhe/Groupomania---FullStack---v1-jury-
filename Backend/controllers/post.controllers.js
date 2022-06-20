@@ -195,7 +195,7 @@ exports.deletePost = (req, res) => {
     try {
         const role = req.role;
         const postId = req.params.id;
-              
+
         db.query(
             `
             SELECT 
@@ -303,39 +303,91 @@ exports.updatePost = (req, res) => {
                                 if (error) {
                                     throw error;
                                 } else {
-                                    deleteImage(result[0], "post_picture");
-
                                     return res.status(200).json({ message: "Post has been updated" });
                                 }
                             }
                         );
                     } else {
-                        db.query(
-                            `
-                            UPDATE 
-                                contents  
-                            JOIN thread 
-                                ON contents.threads_id = thread.threads_id
-                            SET ? WHERE contents.contents_id = ?`,
-                            [
-                                {
-                                    content: content,
-                                    title: title,
-                                    postTypes_id: 2,
-                                    categories_id: categorie,
-                                },
-                                postId,
-                            ],
-                            (error, resultat) => {
-                                if (error) {
-                                    throw error;
-                                } else {
-                                    deleteImage(result[0], "post_picture");
-
-                                    return res.status(200).json({ message: "Post has been updated" });
+                        if (content.includes("/images/post_picture/")) {
+                            db.query(
+                                `
+                                UPDATE 
+                                    contents  
+                                JOIN thread 
+                                    ON contents.threads_id = thread.threads_id
+                                SET ? WHERE contents.contents_id = ?`,
+                                [
+                                    {
+                                        title: title,
+                                        categories_id: categorie,
+                                    },
+                                    postId,
+                                ],
+                                (error, resultat) => {
+                                    if (error) {
+                                        throw error;
+                                    } else {
+                                    
+                                        return res.status(200).json({ message: "Post has been updated" });
+                                    }
                                 }
-                            }
-                        );
+                            );
+                        } else {
+                            db.query(
+                                `
+                                UPDATE 
+                                    contents  
+                                JOIN thread 
+                                    ON contents.threads_id = thread.threads_id
+                                SET ? WHERE contents.contents_id = ?`,
+                                [
+                                    {
+                                        content: content,
+                                        title: title,
+                                        postTypes_id: 2,
+                                        categories_id: categorie,
+                                    },
+                                    postId,
+                                ],
+                                (error, resultat) => {
+                                    if (error) {
+                                        throw error;
+                                    } else {
+                                        deleteImage(result[0], "post_picture");
+
+                                        return res.status(200).json({ message: "Post has been updated" });
+                                    }
+                                }
+                            );
+                        }
+
+                        // db.query(
+                        //     `
+                        //     UPDATE
+                        //         contents
+                        //     JOIN thread
+                        //         ON contents.threads_id = thread.threads_id
+                        //     SET ? WHERE contents.contents_id = ?`,
+                        //     [
+                        //         {
+                        //             content: content,
+                        //             title: title,
+                        //             postTypes_id: 2,
+                        //             categories_id: categorie,
+                        //         },
+                        //         postId,
+                        //     ],
+                        //     (error, resultat) => {
+                        //         if (error) {
+                        //             throw error;
+                        //         } else {
+
+                        //             deleteImage(result[0], "post_picture");
+
+                        //             return res.status(200).json({ message: "Post has been updated" });
+                        //         }
+                        //     }
+                        // );
                     }
                 }
             );

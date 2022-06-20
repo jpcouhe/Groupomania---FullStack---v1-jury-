@@ -40,7 +40,7 @@ exports.insertCategorie = (req, res) => {
                 if (error) {
                     throw error;
                 } else {
-                    return res.status(200).json(result);
+                    return res.status(201).json(result);
                 }
             }
         );

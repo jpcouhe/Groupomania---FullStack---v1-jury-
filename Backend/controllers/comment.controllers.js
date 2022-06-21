@@ -3,61 +3,45 @@ const { deleteImage } = require("../config/deleteImage-config");
 
 exports.createComment = (req, res) => {
     const bodyPost = JSON.parse(req.body.comment);
-    const threadId = bodyPost.threadId;
-    const content = bodyPost.content;
+    const { threadId, content } = bodyPost;
 
+    let data;
     if (!req.file && !content) {
         return res.status(400).json({ message: "Please enter a message" });
-    } else {
-        if (req.file) {
-            db.query(
-                "INSERT INTO contents SET ?",
-                {
-                    content:
-                        req.protocol +
-                        "://" +
-                        req.get("host") +
-                        "/images/comment_picture/" +
-                        req.file.filename,
-                    // récupére le précédant ID
-                    threads_id: threadId,
-                    users_id: req.auth,
-                    postTypes_id: 1,
-                },
-                (error, results) => {
-                    if (error) {
-                        return res.status(500).json({ error: error.sqlMessage });
-                    } else {
-                        return res.status(201).json({ message: "Comment has been created" });
-                    }
-                }
-            );
-        } else {
-            db.query(
-                "INSERT INTO contents SET ?",
-                {
-                    content: content,
-                    threads_id: threadId,
-                    users_id: req.auth,
-                    postTypes_id: 2,
-                },
-                (error, results) => {
-                    if (error) {
-                        return res.status(500).json({ error: error.sqlMessage });
-                    } else {
-                        return res.status(201).json({ message: "Comment has been registered" });
-                    }
-                }
-            );
-        }
     }
+
+    if (req.file) {
+        data = {
+            content: req.protocol + "://" + req.get("host") + "/images/comment_picture/" + req.file.filename,
+            // récupére le précédant ID
+            threads_id: threadId,
+            users_id: req.auth,
+            postTypes_id: 1,
+        };
+    } else {
+        data = {
+            content: content,
+            threads_id: threadId,
+            users_id: req.auth,
+            postTypes_id: 2,
+        };
+    }
+
+    db.query("INSERT INTO contents SET ?", data, (error, results) => {
+        if (error) {
+            return res.status(500).json({ error: error.sqlMessage });
+        } else {
+            return res.status(201).json({ message: "Comment has been registered" });
+        }
+    });
 };
 
 exports.deleteComment = (req, res) => {
     const commentId = req.params.id;
     const role = req.role;
+
     db.query("SELECT * FROM contents WHERE contents_id = ?", [commentId], (error, result) => {
-        if (error) throw error;
+        if (error) return res.status(500).json({ error: error.sqlMessage });
         if (!result[0]) {
             return res.status(404).json({ message: "Object not found !" });
         } else if (result[0].users_id !== req.auth && role === false) {

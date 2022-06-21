@@ -13,8 +13,6 @@ exports.signup = async (req, res) => {
     if (!email || !password || !firstname || !lastname) {
         return res.status(400).json({ error: "Please Enter informations" });
     }
-
-    // Vérification avant d'inserer si l'adresse mail n'existe pas déjà
     db.query(
         `
             INSERT INTO users (lastname, firstname, email, password )SELECT ?,?, ?, ? WHERE NOT EXISTS (SELECT * FROM users WHERE email = ?);
@@ -74,7 +72,6 @@ exports.login = (req, res) => {
         }
 };
 
-/* A logout function that is used to logout a user. */
 exports.logout = async (req, res) => {
     const token = req.token;
     const now = new Date();

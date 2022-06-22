@@ -47,7 +47,7 @@ exports.getOneUser = (req, res) => {
     );
 };
 
-exports.updateProfilUser = (req, res, next) => {
+exports.updateProfilUser = (req, res) => {
     const userId = req.params.id;
     const bodyUser = JSON.parse(req.body.user);
     const lastname = bodyUser.lastname;
@@ -131,7 +131,6 @@ exports.updateProfilUser = (req, res, next) => {
 
 exports.updatePasswordUser = async (req, res) => {
     const userId = req.params.id;
-
     const oldPassword = req.body.oldpassword;
     const newPassword = req.body.newpassword;
 
@@ -164,7 +163,11 @@ exports.updatePasswordUser = async (req, res) => {
                         WHERE users_id = ?`,
                         [cryptPassword, userId],
                         (error, result) => {
-                            res.status(200).json({ message: "Password change ! " });
+                            if (error) {
+                                return res.status(500).json({ error: error.sqlMessage });
+                            } else {
+                                return res.status(200).json({ message: "Password change ! " });
+                            }
                         }
                     );
                 }
@@ -173,7 +176,7 @@ exports.updatePasswordUser = async (req, res) => {
     );
 };
 
-exports.deleteUser = (req, res, next) => {
+exports.deleteUser = (req, res) => {
     const userId = req.params.id;
     db.query(
         `
@@ -188,14 +191,22 @@ exports.deleteUser = (req, res, next) => {
             }
             if (!result[0]) {
                 return res.status(404).json({ error: "User not found !" });
-            } else {
-                db.query(
-                    `
+            }
+
+            if (result[0].users_id !== req.auth) {
+                return res.status(4013).json({ message: "Forbidden" });
+            }
+
+            db.query(
+                `
                     DELETE 
                     FROM users 
                     WHERE users_id = ?`,
-                    [userId],
-                    (error, resultat) => {
+                [userId],
+                (error, resultat) => {
+                    if (error) {
+                        return res.status(500).json({ error: error.sqlMessage });
+                    } else {
                         const imageProfil = result[0].profile_picture_location;
                         if (imageProfil !== null) {
                             const isImageProfilDefault = imageProfil.includes("/images/default_picture");
@@ -206,8 +217,8 @@ exports.deleteUser = (req, res, next) => {
                         }
                         return res.status(200).json({ message: "User Deleted" });
                     }
-                );
-            }
+                }
+            );
         }
     );
 };

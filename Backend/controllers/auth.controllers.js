@@ -18,7 +18,7 @@ exports.signup = async (req, res) => {
             INSERT INTO users (lastname, firstname, email, password )SELECT ?,?, ?, ? WHERE NOT EXISTS (SELECT * FROM users WHERE email = ?);
             `,
         [lastname, firstname, email, cryptPassword, email],
-        (error, results, fields) => {
+        (error, results) => {
             if (error) {
                 return res.status(500).json({ error: error.sqlMessage });
             } else {

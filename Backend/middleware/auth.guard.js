@@ -1,6 +1,6 @@
 const jwt = require("../utils/jwt");
 const cache = require("../utils/cache");
-const db = require("../config/db-config");
+
 
 module.exports = async (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];

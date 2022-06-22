@@ -32,7 +32,6 @@ html {
 //--------------------------------------------
 
 body {
-
     color: var(--color_text-title);
     background-color: var(--background-light);
     font-family: "Roboto", sans-serif;
@@ -271,4 +270,7 @@ textarea::placeholder {
     font-size: 12px;
 }
 
-
+button {
+    border: none;
+    background-color: transparent;
+}

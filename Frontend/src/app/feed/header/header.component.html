@@ -4,7 +4,7 @@
             class="d-flex flex-align-items-center flex-justify-content-between m-auto h100 maxW1440 responsive"
         >
             <div class="left-nav d-flex flex-align-items-center maxW1440">
-                <a [routerLink]="'/accueil/feed/'">
+                <a aria-label="Retour page accueil" [routerLink]="'/accueil/feed/'">
                     <picture class="left-nav__logo">
                         <source
                             srcset="../../../assets/images/icon-left-font.svg"
@@ -24,18 +24,27 @@
 
                     <a [routerLink]="['/accueil/users']"><mat-icon class="icon">groups</mat-icon></a>
 
-                    <mat-icon *ngIf="dark" (click)="toggleDarkTheme()" class="icon">dark_mode</mat-icon>
+                    <button aria-label="Changer le theme">
+                        <mat-icon aria *ngIf="dark" (click)="toggleDarkTheme()" class="icon"
+                            >dark_mode</mat-icon
+                        >
+                    </button>
 
-                    <mat-icon *ngIf="!dark" (click)="toggleDarkTheme()" class="icon">light_mode</mat-icon>
-
-                    <mat-icon class="icon" (click)="logOut()">logout</mat-icon>
-                    <img
-                        (click)="displayProfil()"
-                        class="right-nav__avatar"
-                        *ngIf="user"
-                        src="{{ user.imgUser }}"
-                        alt=""
-                    />
+                    <button aria-label="Changer le theme">
+                        <mat-icon *ngIf="!dark" (click)="toggleDarkTheme()" class="icon">light_mode</mat-icon>
+                    </button>
+                    <button aria-label="Se deconnecter">
+                        <mat-icon class="icon" (click)="logOut()">logout</mat-icon>
+                    </button>
+                    <button aria-label="Modifier le profil">
+                        <img
+                            (click)="displayProfil()"
+                            class="right-nav__avatar"
+                            *ngIf="user"
+                            src="{{ user.imgUser }}"
+                            alt=""
+                        />
+                    </button>
                 </div>
 
                 <!-- <div>

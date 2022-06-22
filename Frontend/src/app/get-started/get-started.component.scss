@@ -1,6 +1,5 @@
 @use "../../styles/Utils/breakpoints" as *;
 
-
 .getStarted__logo {
     margin: 100px 20px;
     img {
@@ -69,6 +68,7 @@
 
         &__defaultImage {
             margin: 20px 0;
+            cursor: pointer;
         }
 
         &__popup {

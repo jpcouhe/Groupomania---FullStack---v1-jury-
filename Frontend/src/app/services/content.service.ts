@@ -35,45 +35,45 @@ export class ContentService {
     createPost(title: string, content: string | File, categorie: string) {
         if (typeof content === "string") {
             const post = { title: title, categorie: categorie, content: content };
-            const formData = new FormData();
-            formData.append("post", JSON.stringify(post));
-            return this.http.post<{ message: string }>("http://localhost:3003/api/post/", formData);
+          
+            return this.http.post<{ message: string }>(
+                "http://localhost:3003/api/post/",
+                this.createFormData("post", JSON.stringify(post))
+            );
         } else {
-            const formData = new FormData();
             const post = { title: title, categorie: categorie };
-            formData.append("post", JSON.stringify(post));
-            formData.append("image", content);
-            return this.http.post<{ message: string }>("http://localhost:3003/api/post/", formData);
+           
+            return this.http.post<{ message: string }>("http://localhost:3003/api/post/", this.createFormData("post", JSON.stringify(post), "image", content));
         }
     }
 
     modifyPost(id: string, title: string, content: string | File, categorie: string) {
         if (typeof content === "string") {
             const post = { title: title, content: content, categorie: categorie };
-            const formData = new FormData();
-            formData.append("post", JSON.stringify(post));
-            return this.http.put<{ message: string }>("http://localhost:3003/api/post/" + id, formData);
+           
+            return this.http.put<{ message: string }>(
+                "http://localhost:3003/api/post/" + id,
+                this.createFormData("post", JSON.stringify(post))
+            );
         } else {
-            const formData = new FormData();
             const post = { title: title, categorie: categorie };
-            formData.append("post", JSON.stringify(post));
-            formData.append("image", content);
-            return this.http.put<{ message: string }>("http://localhost:3003/api/post/" + id, formData);
+           
+            return this.http.put<{ message: string }>("http://localhost:3003/api/post/" + id, this.createFormData("post", JSON.stringify(post), "image", content));
         }
     }
 
     createComment(threadid: any, content: string | File) {
         if (typeof content === "string") {
-            const formData = new FormData();
             const comment = { threadId: threadid, content: content };
-            formData.append("comment", JSON.stringify(comment));
-            return this.http.post<{ message: string }>("http://localhost:3003/api/comment/", formData);
+           
+            return this.http.post<{ message: string }>(
+                "http://localhost:3003/api/comment/",
+                this.createFormData("comment", JSON.stringify(comment))
+            );
         } else {
-            const formData = new FormData();
             const comment = { threadId: threadid };
-            formData.append("comment", JSON.stringify(comment));
-            formData.append("image", content);
-            return this.http.post<{ message: string }>("http://localhost:3003/api/comment/", formData);
+            
+            return this.http.post<{ message: string }>("http://localhost:3003/api/comment/", this.createFormData("comment", JSON.stringify(comment), "image", content));
         }
     }
 
@@ -93,5 +93,12 @@ export class ContentService {
 
     getNumberComment(id: any) {
         return this.http.get<any>("http://localhost:3003/api/comment/" + id + "/nb");
+    }
+
+    createFormData(name: string, value: any, nameImage: string = "", image: any = "") {
+        const formData = new FormData();
+        formData.append(name, value);
+        formData.append(nameImage, image);
+        return formData;
     }
 }

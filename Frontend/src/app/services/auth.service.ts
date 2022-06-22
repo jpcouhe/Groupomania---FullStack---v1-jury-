@@ -40,7 +40,6 @@ export class AuthService {
                 tap(({ userId, access_token, token_type, expires_in }) => {
                     this.userId = userId;
                     this.access_token = access_token;
-
                     this.isLoggedIn = true;
                 })
             );

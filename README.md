@@ -73,7 +73,7 @@ API Documentation is available here : https://documenter.getpostman.com/view/197
     
     ### 🔍 Frontend
     
-This project was generated with Angular CLI version 13.2.4.
+This project was generated with Angular CLI version 13.3.5.
 
 - `cd ./Frontend`
 - `npm install`

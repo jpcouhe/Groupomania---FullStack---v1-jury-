@@ -66,7 +66,7 @@ API Documentation is available here : https://documenter.getpostman.com/view/197
     3. Add tables in the new database with the file BDD.sql
 
     ```
-    SOURCE docs/BDD.sql 
+    SOURCE docs/social_network.sql 
     use the correct path
     ```
     

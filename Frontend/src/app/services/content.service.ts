@@ -35,45 +35,54 @@ export class ContentService {
     createPost(title: string, content: string | File, categorie: string) {
         if (typeof content === "string") {
             const post = { title: title, categorie: categorie, content: content };
-          
+
             return this.http.post<{ message: string }>(
                 "http://localhost:3003/api/post/",
                 this.createFormData("post", JSON.stringify(post))
             );
         } else {
             const post = { title: title, categorie: categorie };
-           
-            return this.http.post<{ message: string }>("http://localhost:3003/api/post/", this.createFormData("post", JSON.stringify(post), "image", content));
+
+            return this.http.post<{ message: string }>(
+                "http://localhost:3003/api/post/",
+                this.createFormData("post", JSON.stringify(post), "image", content)
+            );
         }
     }
 
     modifyPost(id: string, title: string, content: string | File, categorie: string) {
         if (typeof content === "string") {
             const post = { title: title, content: content, categorie: categorie };
-           
+
             return this.http.put<{ message: string }>(
                 "http://localhost:3003/api/post/" + id,
                 this.createFormData("post", JSON.stringify(post))
             );
         } else {
             const post = { title: title, categorie: categorie };
-           
-            return this.http.put<{ message: string }>("http://localhost:3003/api/post/" + id, this.createFormData("post", JSON.stringify(post), "image", content));
+
+            return this.http.put<{ message: string }>(
+                "http://localhost:3003/api/post/" + id,
+                this.createFormData("post", JSON.stringify(post), "image", content)
+            );
         }
     }
 
     createComment(threadid: any, content: string | File) {
         if (typeof content === "string") {
             const comment = { threadId: threadid, content: content };
-           
+
             return this.http.post<{ message: string }>(
                 "http://localhost:3003/api/comment/",
                 this.createFormData("comment", JSON.stringify(comment))
             );
         } else {
             const comment = { threadId: threadid };
-            
-            return this.http.post<{ message: string }>("http://localhost:3003/api/comment/", this.createFormData("comment", JSON.stringify(comment), "image", content));
+
+            return this.http.post<{ message: string }>(
+                "http://localhost:3003/api/comment/",
+                this.createFormData("comment", JSON.stringify(comment), "image", content)
+            );
         }
     }
 
@@ -95,7 +104,7 @@ export class ContentService {
         return this.http.get<any>("http://localhost:3003/api/comment/" + id + "/nb");
     }
 
-    createFormData(name: string, value: any, nameImage: string = "", image: any = "") {
+    createFormData(name: string, value: any, nameImage: string = "image", image: any = "") {
         const formData = new FormData();
         formData.append(name, value);
         formData.append(nameImage, image);

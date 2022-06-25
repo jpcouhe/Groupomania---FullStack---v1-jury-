@@ -29,7 +29,7 @@ exports.createComment = (req, res) => {
 
     db.query("INSERT INTO contents SET ?", data, (error, results) => {
         if (error) {
-            return res.status(500).json({ error: error.sqlMessage });
+            return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
         } else {
             return res.status(201).json({ message: "Comment has been registered" });
         }
@@ -41,7 +41,9 @@ exports.deleteComment = (req, res) => {
     const role = req.role;
 
     db.query("SELECT * FROM contents WHERE contents_id = ?", [commentId], (error, result) => {
-        if (error) return res.status(500).json({ error: error.sqlMessage });
+        if (error) {
+            return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
+        }
         if (!result[0]) {
             return res.status(404).json({ message: "Object not found !" });
         } else if (result[0].users_id !== req.auth && role === false) {
@@ -49,7 +51,7 @@ exports.deleteComment = (req, res) => {
         } else {
             db.query("DELETE FROM contents WHERE contents_id = ?", [commentId], (error, resultat) => {
                 if (error) {
-                    return res.status(500).json({ error: error.sqlMessage });
+                    return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
                 } else {
                     if (result[0].postTypes_id == 1) {
                         deleteImage(result[0], "comment_picture");
@@ -61,49 +63,67 @@ exports.deleteComment = (req, res) => {
     });
 };
 
-exports.getAllComments = (req, res) => {
-    const nbItems = parseInt(req.params.limit);
+exports.getAllComments = async (req, res) => {
+    let nbItems = parseInt(req.params.limit);
     let start = (req.params.start - 1) * nbItems;
     const threadId = req.params.id;
+
+    const nbComment = await new Promise((resolve, rejet) => {
+        db.query(
+            `SELECT SUM(CASE WHEN contents.threads_id = ? THEN 1 ELSE 0 END) nbComment FROM contents`,
+            [threadId],
+            (error, result) => {
+                if (error) {
+                    return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
+                } else {
+                    // J'enlève le Post Initial
+                    let comment = result[0].nbComment - 1;
+                    resolve(comment);
+                }
+            }
+        );
+    });
+
+    // Changement du parametre limit pour ne pas recuperer le post initial et se referer au nb de commentaire total
+    if (nbComment - start < nbItems) {
+        nbItems = nbComment - start;
+    }
+
     db.query(
-        `WITH tempTable AS (
-                SELECT 
-                    ROW_NUMBER() OVER (ORDER BY contents_id
-                    ) row_num,
-                    threads_id, 
-                    contents_id, 
-                    users_id, 
-                    created_datetime, 
-                    content 
-                    FROM contents c 
-                    WHERE c.threads_id = ?
-                  
-            )
-            SELECT 
-                tt.row_num,
-                tt.contents_id, 
-                tt.users_id, 
-                tt.content, 
-                tt.created_datetime, 
-                u.lastname, 
-                u.firstname, 
-                u.profile_picture_location,
-                SUM(CASE WHEN l.like_content_id IS NOT NULL THEN 1 ELSE 0 END) nbLike,
-                SUM(CASE WHEN l.like_user_id = ? THEN TRUE ELSE FALSE END) isLike
-            FROM tempTable tt
-            LEFT JOIN likes l 
-                ON tt.contents_id = l.like_content_id
-            JOIN users u 
-                ON tt.users_id = u.users_id
-            WHERE tt.row_num > 1
-            GROUP BY tt.contents_id, tt.users_id, tt.content, u.lastname, u.firstname, u.profile_picture_location, tt.created_datetime
-            ORDER BY tt.created_datetime DESC
-            LIMIT ? OFFSET ? ;`,
-        [threadId, req.auth, nbItems, start],
+        `
+    SELECT 
+
+   c.contents_id, 
+   c.users_id, 
+   c.content, 
+   c.created_datetime, 
+   u.lastname, 
+   u.firstname, 
+   u.profile_picture_location,
+   SUM(CASE WHEN l.like_content_id IS NOT NULL THEN 1 ELSE 0 END) nbLike,
+   SUM(CASE WHEN l.like_user_id = ? THEN TRUE ELSE FALSE END) isLike
+   FROM contents c 
+   LEFT JOIN likes l 
+   ON c.contents_id = l.like_content_id
+   JOIN users u 
+   ON c.users_id = u.users_id
+   WHERE c.threads_id = ?
+   GROUP BY  c.contents_id, 
+   c.users_id, 
+   c.content, 
+   c.created_datetime, 
+   u.lastname, 
+   u.firstname, 
+   u.profile_picture_location
+   ORDER BY c.created_datetime DESC
+   LIMIT ? OFFSET ?
+    `,
+        [req.auth, threadId, nbItems, start],
         (error, result) => {
             if (error) {
-                return res.status(500).json({ error: error.sqlMessage });
+                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
             } else {
+                console.log(result);
                 return res.status(200).json(result);
             }
         }
@@ -117,7 +137,7 @@ exports.getNumberCommentsForAThread = (req, res) => {
         [threadId],
         (error, result) => {
             if (error) {
-                return res.status(500).json({ error: error.sqlMessage });
+                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
             } else {
                 // J'enlève le Post Initial
                 let comment = result[0].nbComment - 1;

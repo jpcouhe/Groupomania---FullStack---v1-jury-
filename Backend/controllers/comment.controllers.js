@@ -13,7 +13,6 @@ exports.createComment = (req, res) => {
     if (req.file) {
         data = {
             content: req.protocol + "://" + req.get("host") + "/images/comment_picture/" + req.file.filename,
-            // récupére le précédant ID
             threads_id: threadId,
             users_id: req.auth,
             postTypes_id: 1,

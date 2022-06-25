@@ -19,7 +19,7 @@ exports.getAllCategorie = (req, res) => {
     );
 };
 
-exports.insertCategorie = async (req, res) => {
+exports.insertCategorie = (req, res) => {
     const { name, slug } = req.body;
 
     db.query(
@@ -34,7 +34,9 @@ exports.insertCategorie = async (req, res) => {
         },
         (error, result) => {
             if (error) {
-                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
+                return res
+                    .status(500)
+                    .json({ error: "Votre requête n'a pas pu aboutir, erreur 1062, duplicate key" });
             } else {
                 return res.status(201).json(result);
             }

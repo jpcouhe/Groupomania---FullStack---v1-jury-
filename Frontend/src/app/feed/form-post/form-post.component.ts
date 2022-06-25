@@ -31,7 +31,7 @@ export class FormPostComponent implements OnInit {
         this.leftCharLength = 70;
         this.postForm = this.formBuilder.group({
             title: [null, [Validators.required, Validators.maxLength(80)]],
-            content: [null, [Validators.required]],
+            content: [null, [Validators.required, Validators.maxLength(1000)]],
             file: [null, [Validators.required]],
             categorie: ["", [Validators.required]],
         });

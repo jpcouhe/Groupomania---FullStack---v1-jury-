@@ -60,7 +60,10 @@ API Documentation is available here : https://documenter.getpostman.com/view/197
 
     ``` 
     --1: Create new base
-    CREATE DATABASE social_network CHARACTER SET 'utf8'  
+    CREATE DATABASE social_network CHARACTER SET 'utf8'; 
+    ```
+    ```
+    USE social_network;
     ```
     
     3. Add tables in the new database with the file BDD.sql

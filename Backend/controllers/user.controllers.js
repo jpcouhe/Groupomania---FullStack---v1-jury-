@@ -15,7 +15,7 @@ exports.getAllUsers = (req, res) => {
         ORDER BY lastname`,
         (error, result) => {
             if (error) {
-                return res.status(500).json({ error: error.sqlMessage });
+                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
             } else {
                 return res.status(200).json(result);
             }
@@ -39,7 +39,7 @@ exports.getOneUser = (req, res) => {
         [userId],
         (error, result) => {
             if (error) {
-                return res.status(500).json({ error: error.sqlMessage });
+                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
             } else {
                 return res.status(200).json(result[0]);
             }
@@ -66,7 +66,7 @@ exports.updateProfilUser = (req, res) => {
             [userId],
             (error, result) => {
                 if (error) {
-                    return res.status(500).json({ error: error.sqlMessage });
+                    return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
                 }
 
                 if (!result[0]) return res.status(404).json({ message: "User not found !" });
@@ -106,7 +106,7 @@ exports.updateProfilUser = (req, res) => {
                     [data, userId],
                     (error, updateUser) => {
                         if (error) {
-                            return res.status(500).json({ error: error.sqlMessage });
+                            return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
                         } else {
                             if (req.file) {
                                 const imageProfil = result[0].profile_picture_location;
@@ -145,7 +145,7 @@ exports.updatePasswordUser = async (req, res) => {
         [userId],
         async (error, result) => {
             if (error) {
-                return res.status(500).json({ error: error.sqlMessage });
+                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
             }
             if (!result[0]) {
                 return res.status(404).json({ message: "User not found !" });
@@ -164,7 +164,7 @@ exports.updatePasswordUser = async (req, res) => {
                         [cryptPassword, userId],
                         (error, result) => {
                             if (error) {
-                                return res.status(500).json({ error: error.sqlMessage });
+                                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
                             } else {
                                 return res.status(200).json({ message: "Password change ! " });
                             }
@@ -187,7 +187,7 @@ exports.deleteUser = (req, res) => {
         [userId],
         (error, result) => {
             if (error) {
-                return res.status(500).json({ error: error.sqlMessage });
+                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
             }
             if (!result[0]) {
                 return res.status(404).json({ error: "User not found !" });
@@ -205,7 +205,7 @@ exports.deleteUser = (req, res) => {
                 [userId],
                 (error, resultat) => {
                     if (error) {
-                        return res.status(500).json({ error: error.sqlMessage });
+                        return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
                     } else {
                         const imageProfil = result[0].profile_picture_location;
                         if (imageProfil !== null) {

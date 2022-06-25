@@ -24,7 +24,7 @@ exports.createPost = (req, res) => {
         [title, categorie],
         (error, results) => {
             if (error) {
-                return res.status(500).json({ error: error.sqlMessage });
+                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
             } else {
                 if (req.file) {
                     data = {
@@ -56,7 +56,7 @@ exports.createPost = (req, res) => {
                     [data],
                     (error, result) => {
                         if (error) {
-                            return res.status(500).json({ error: error.sqlMessage });
+                            return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
                         } else {
                             return res.status(201).json({ message: "Post has been created" });
                         }
@@ -120,7 +120,7 @@ exports.getAllPosts = (req, res) => {
         sqlParams,
         (error, result) => {
             if (error) {
-                return res.status(500).json({ error: error.sqlMessage });
+                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
             } else {
                 return res.status(200).json(result);
             }
@@ -137,10 +137,14 @@ exports.deletePost = (req, res) => {
             SELECT 
                 * 
             FROM contents 
-            WHERE contents.threads_id = ?`,
+            WHERE contents.threads_id = ?
+            ORDER BY contents.created_datetime
+            LIMIT 1`,
         [postId],
         (error, result) => {
-            if (error) throw error;
+            if (error) {
+                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
+            }
             if (!result[0]) {
                 return res.status(404).json({ message: "Object not found !" });
             } else if (result[0].users_id !== req.auth && role === false) {
@@ -148,7 +152,7 @@ exports.deletePost = (req, res) => {
             } else {
                 db.query("DELETE FROM thread WHERE thread.threads_id = ?", [postId], (error, resultat) => {
                     if (error) {
-                        return res.status(500).json({ error: error.sqlMessage });
+                        return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
                     } else {
                         if (result[0].postTypes_id == 1) {
                             deleteImage(result[0], "post_picture");
@@ -186,7 +190,7 @@ exports.updatePost = (req, res) => {
             [postId],
             (error, result) => {
                 if (error) {
-                    return res.status(500).json({ error: error.sqlMessage });
+                    return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
                 }
                 if (!result[0]) {
                     if (req.file) {
@@ -240,7 +244,7 @@ exports.updatePost = (req, res) => {
                     [data, postId],
                     (error, resultat) => {
                         if (error) {
-                            return res.status(500).json({ error: error.sqlMessage });
+                            return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
                         } else {
                             if (resultat.affectedRows !== 0) {
                                 if (req.file || !content.includes("images/post_picture")) {

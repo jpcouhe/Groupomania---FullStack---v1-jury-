@@ -16,8 +16,9 @@ exports.contentLike = async (req, res) => {
                 WHERE like_content_id  = ? AND like_user_id = ?`,
             [content, userId],
             (error, result) => {
-                if (error) return res.status(500).json({ error: error.sqlMessage });
-                else {
+                if (error) {
+                    return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
+                } else {
                     resolve(result);
                 }
             }
@@ -44,8 +45,9 @@ exports.contentLike = async (req, res) => {
     }
 
     db.query(sql, [userId, content], (error, result) => {
-        if (error) return res.status(500).json({ error: error.sqlMessage });
-        else {
+        if (error) {
+            return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
+        } else {
             return res.status(200).json({ message });
         }
     });

@@ -11,7 +11,7 @@ exports.getAllCategorie = (req, res) => {
         `,
         (error, result) => {
             if (error) {
-                return res.status(500).json({ error: error.sqlMessage });
+                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
             } else {
                 return res.status(200).json(result);
             }
@@ -34,7 +34,7 @@ exports.insertCategorie = async (req, res) => {
         },
         (error, result) => {
             if (error) {
-                return res.status(500).json({ error: error.sqlMessage });
+                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
             } else {
                 return res.status(201).json(result);
             }

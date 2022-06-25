@@ -27,7 +27,9 @@ app.use(express.json());
 
 /* Connecting to the database. */
 db.connect((err) => {
-    if (err) throw err;
+    if (err) {
+        res.status(500).json({ error: "Impossible de se connecter à la base de donnée" });
+    }
     console.log("Database connected !!");
 });
 

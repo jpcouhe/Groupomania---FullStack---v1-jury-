@@ -20,7 +20,7 @@ exports.signup = async (req, res) => {
         [lastname, firstname, email, cryptPassword, email],
         (error, results) => {
             if (error) {
-                return res.status(500).json({ error: error.sqlMessage });
+                return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
             } else {
                 // Vérification de la création de la ligne
                 if (results.affectedRows !== 1) {
@@ -49,7 +49,7 @@ exports.login = (req, res) => {
                 [email],
                 async (error, result) => {
                     if (error) {
-                        return res.status(500).json({ error: error.sqlMessage });
+                        return res.status(500).json({ error: "Votre requête n'a pas pu aboutir" });
                     }
                     if (!result[0]) {
                         return res.status(403).json({ error: "Email not recognized" });

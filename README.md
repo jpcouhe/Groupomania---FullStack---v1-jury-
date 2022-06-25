@@ -66,7 +66,7 @@ API Documentation is available here : https://documenter.getpostman.com/view/197
     3. Add tables in the new database with the file BDD.sql
 
     ```
-    SOURCE docs/social_network.sql 
+    SOURCE ../Docs/social_network.sql 
     use the correct path
     ```
     
@@ -110,6 +110,6 @@ DATABASE_NAME = xxx
 JWT_KEY= xxx
 
 # To configure module Keyv use your mysql login (to support blackList Token)
-KEY_PARAM = user:pass@localhost:3306/dbname
+KEYV_PARAM = user:password@host:port/database_name
 ```
 
